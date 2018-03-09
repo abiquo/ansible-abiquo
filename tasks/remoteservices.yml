@@ -1,0 +1,10 @@
+---
+- name: Install Abiquo packages for an RS server
+  yum: name={{ item }} state=present
+  with_items:
+    - abiquo-remote-services
+    - abiquo-sosreport-plugins
+    - jdk
+
+- name: Ensure abiquo/config folder exists
+  file: path=/opt/abiquo/config state=directory

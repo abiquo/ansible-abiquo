@@ -1,0 +1,30 @@
+---
+- name: Install Pip
+  yum: name={{ item }} state=present
+  with_items: 
+    - python-pip
+
+- name: Ensure python OpenSSL dependencies are installed.
+  pip:
+    name: pyOpenSSL
+    state: present
+
+- name: Create cert dir
+  file: path=/etc/pki/abiquo/ state=directory
+
+- name: Generate an OpenSSL private key.
+  openssl_privatekey:
+    path: "{{ ui_cert_key_file }}"
+
+- name: Generate an OpenSSL CSR
+  openssl_csr:
+    path: "{{ ui_cert_csr_file }}"
+    privatekey_path: "{{ ui_cert_key_file }}"
+    common_name: "{{ ui_server_name }}"
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: "{{ ui_cert_file }}"
+    privatekey_path: "{{ ui_cert_key_file }}"
+    csr_path: "{{ ui_cert_csr_file }}"
+    provider: selfsigned

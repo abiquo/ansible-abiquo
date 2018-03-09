@@ -1,0 +1,4 @@
+---
+- name: Abiquo properties
+  template: src=abiquo.properties.j2 dest=/opt/abiquo/config/abiquo.properties
+  notify: restart abiquo-tomcat

@@ -1,0 +1,66 @@
+---
+- include_tasks: mariadb_slave.yml
+- include_tasks: jasper.yml
+
+- name: Download Abiquo reporting module
+  get_url:
+    url: "{{ reporting_core_url }}"
+    dest: "{{ jasperserver_install_files }}/abiquo-reporting-core.zip"
+    mode: 0644
+    force: no
+
+- name: Install unzip to deflate reports zip file
+  yum: name=unzip state=present
+
+- name: Ensure extract directory exists
+  file:
+    path: "{{ jasperserver_install_files }}/abiquo-reporting-core"
+    state: directory
+
+- name: Extract Abiquo reporting module
+  unarchive:
+    remote_src: True
+    src: "{{ jasperserver_install_files }}/abiquo-reporting-core.zip"
+    dest: "{{ jasperserver_install_files }}/abiquo-reporting-core"
+  register: zipextracted
+
+- name: Get JasperServer installation dir
+  shell: "find {{ jasperserver_install_files }} -maxdepth 1 -type d | egrep -v \"^{{ jasperserver_install_files }}$\" | grep jasperreports-server-cp"
+  register: lsjasperinstall
+
+- name: Replace reports install script
+  copy:
+    src: reports-install.sh
+    dest: "{{ jasperserver_install_files }}/abiquo-reporting-core/install.sh"
+    mode: 0755
+
+- name: Adjust installation script
+  replace:
+    path: "{{ jasperserver_install_files }}/abiquo-reporting-core/install.sh"
+    regexp: '^JASPERPATH=.*$'
+    replace: "JASPERPATH={{ lsjasperinstall.stdout }}"
+    backup: yes
+
+- name: Required 'reporter' user
+  mysql_user:
+    name: reporter
+    password: R3p0rt3r
+    host: localhost
+    priv: "kinton_reports.*:ALL"
+    login_user: root
+    login_password: ''
+
+- name: Required 'reporter' user
+  mysql_user:
+    name: reporter
+    password: R3p0rt3r
+    host: "%"
+    priv: "kinton_reports.*:ALL"
+    login_user: root
+    login_password: ''
+
+- name: Run Abiquo reporting core installation script
+  shell: ./install.sh
+  args:
+    chdir: "{{ jasperserver_install_files }}/abiquo-reporting-core"
+  # when: zipextracted.changed

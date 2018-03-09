@@ -1,0 +1,37 @@
+---
+- name: Install libselinux-python
+  yum: name=libselinux-python state=present
+
+- name: Selinux state
+  command: getenforce
+  register: selinux_state
+
+- name: Set selinux to permissive
+  selinux: policy=targeted state=permissive
+  when: selinux_state.stdout != "Disabled"
+
+- name: Create Abiquo repos
+  command: /bin/true
+  notify:
+    - Create Base Repo
+    - Create Updates Repo
+    - Clear cache after repo modification
+
+- name: Run handlers create
+  meta: flush_handlers
+
+- name: Install release rpm
+  yum: name=abiquo-release-ee state=present disable_gpg_check=yes
+
+- name: Update Abiquo repos
+  command: /bin/true
+  notify:
+    - Create Base Repo
+    - Create Updates Repo
+    - Clear cache after repo modification
+
+- name: Run handlers update
+  meta: flush_handlers
+
+- name: Add EPEL repository
+  yum: name=epel-release state=present

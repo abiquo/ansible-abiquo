@@ -1,0 +1,23 @@
+---
+- name: Install RabbitMQ
+  yum: name={{ item }} state=present
+  with_items:
+    - rabbitmq-server
+
+- name: Start and enable RabbitMQ service
+  service: name=rabbitmq-server state=started enabled=yes
+
+- name: Enables the rabbitmq_management plugin
+  rabbitmq_plugin:
+    names: rabbitmq_management
+    state: enabled
+
+- rabbitmq_user:
+    user: "{{ abiquo_rabbitmq_username }}"
+    password: "{{ abiquo_rabbitmq_password }}"
+    vhost: "{{ abiquo_rabbitmq_vhost }}"
+    tags: administrator
+    configure_priv: .*
+    read_priv: .*
+    write_priv: .*
+    state: present

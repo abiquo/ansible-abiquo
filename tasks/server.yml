@@ -1,0 +1,49 @@
+---
+- name: Install Abiquo packages for an API server
+  yum: name={{ item }} state=present
+  with_items:
+    - abiquo-api
+    - abiquo-m
+    - abiquo-model
+    - abiquo-sosreport-plugins
+
+- name: Ensure abiquo/config folder exists
+  file: path=/opt/abiquo/config state=directory
+
+- name: Ensure fragments folder exists
+  file: path=/var/lib/abiquo-fragments state=directory
+
+- name: Create kinton schema.
+  mysql_db:
+    name: kinton
+    state: present
+    login_host: "{{ abiquo_db_host }}"
+    login_port: "{{ abiquo_db_port }}"
+    login_user: "{{ abiquo_db_user }}"
+    login_password: "{{ abiquo_db_pass }}"
+  register: kinton_created
+
+- name: Ensure MySQL databases are present.
+  mysql_db:
+    name: kinton
+    state: import
+    login_host: "{{ abiquo_db_host }}"
+    login_port: "{{ abiquo_db_port }}"
+    login_user: "{{ abiquo_db_user }}"
+    login_password: "{{ abiquo_db_pass }}"
+    target: /usr/share/doc/abiquo-model/database/kinton-schema.sql
+  when: kinton_created.changed
+
+- name: Obtain m_user default password
+  shell: mysql kinton -Nse "select COMMENTS from DATABASECHANGELOG where ID = 'default_user_for_m'"
+  register: abiquo_default_outbound_api_user_password
+
+- name: Dummy properties file so liquibase will run
+  copy:
+    content: ""
+    dest: /opt/abiquo/config/abiquo.properties
+    force: no
+
+- name: Run liquibase update
+  shell: abiquo-db -h {{ abiquo_db_host }} -u {{ abiquo_db_user }} -p {{ abiquo_db_pass }} -P {{ abiquo_db_port }} update
+  notify: restart abiquo-tomcat

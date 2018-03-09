@@ -1,0 +1,53 @@
+---
+- include_tasks: repository.yml
+
+- include_tasks: selfsigned.yml
+  when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'frontend') and ui_cert_source == 'selfsigned'
+
+- include_tasks: frontend.yml
+  when: abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'frontend'
+
+- include_tasks: apache.yml
+  when: abiquo_profile == 'monolithic'
+
+- include_tasks: mariadb.yml
+  when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'monitoring') and abiquo_install_services
+
+- include_tasks: database.yml
+  when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'monitoring') and abiquo_install_database
+
+- include_tasks: rabbitmq.yml
+  when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server') and abiquo_install_services
+
+- include_tasks: redis.yml
+  when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'remoteservices') and abiquo_install_services
+
+- include_tasks: cassandra.yml
+  when: abiquo_profile == 'monitoring' and abiquo_install_services
+
+- include_tasks: kairosdb.yml
+  when: abiquo_profile == 'monitoring' and abiquo_install_services
+
+- include_tasks: server.yml
+  when: abiquo_profile == 'monolithic' or abiquo_profile == 'server'
+
+- include_tasks: remoteservices.yml
+  when: abiquo_profile == 'monolithic' or abiquo_profile == 'remoteservices'
+
+- include_tasks: v2v.yml
+  when: abiquo_profile == 'monolithic' or abiquo_profile == 'v2v'
+
+- include_tasks: monitoring.yml
+  when: abiquo_profile == 'monitoring'
+
+- include_tasks: kvm.yml
+  when: abiquo_profile == 'kvm'
+
+- include_tasks: jce.yml
+  when: abiquo_profile == 'monolithic' or abiquo_profile == 'v2v' or abiquo_profile == 'remoteservices' or abiquo_profile == 'server'
+
+- include_tasks: properties.yml
+  when: abiquo_profile == 'monolithic' or abiquo_profile == 'v2v' or abiquo_profile == 'remoteservices' or abiquo_profile == 'server'
+
+- include_tasks: reporting.yml
+  when: abiquo_profile == 'reporting'
