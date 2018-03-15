@@ -21,10 +21,14 @@
     path: "{{ ui_cert_csr_file }}"
     privatekey_path: "{{ ui_cert_key_file }}"
     common_name: "{{ ui_server_name }}"
+    countryName: ES
+    organization_name: Abiquo
+    organizational_unit_name: Engineering
 
-- name: Generate a Self Signed OpenSSL certificate
-  openssl_certificate:
-    path: "{{ ui_cert_file }}"
-    privatekey_path: "{{ ui_cert_key_file }}"
-    csr_path: "{{ ui_cert_csr_file }}"
-    provider: selfsigned
+# Had to do this, sorry.
+# Ansible's openssl_certificate does not seem to allow setting the
+# `extensions` flag, and that makes keytool to fail parsing the cert.
+- name: Generate self-signed SSL certificate
+  shell: "openssl req -nodes -x509 -sha256 -days 3650 -in {{ ui_cert_csr_file }} -key {{ ui_cert_key_file }} -out {{ ui_cert_file }} -extensions v3_ca"
+  args:
+     creates: "{{ ui_cert_file }}"
