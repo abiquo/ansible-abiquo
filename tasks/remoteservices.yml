@@ -17,6 +17,9 @@
   notify: restart abiquo-tomcat
   register: certimported
 
+- name: Start guacd
+  service: name=guacd state=started enabled=yes
+
 - name: Force tomcat restart for cert import
   meta: flush_handlers
   when: certimported.changed
