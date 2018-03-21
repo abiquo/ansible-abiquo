@@ -58,7 +58,7 @@
   service: name=cassandra state=restarted
 
 - name: restart kairosdb
-  service: name=kariosdb state=restarted
+  service: name=kairosdb state=restarted
 
 - name: restart mysql
   service: name=mysql state=restarted

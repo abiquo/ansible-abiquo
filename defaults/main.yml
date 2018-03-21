@@ -67,6 +67,7 @@ kariosdb_cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"
 # Abiquo
 abiquo_default_properties:
   abiquo.auth.module: abiquo
+  abiquo.datacenter.id: "{{ ansible_hostname }}"
   abiquo.server.sessionTimeout: 60
   abiquo.server.api.location: "https://{{ ansible_fqdn }}/api"
   abiquo.redis.port: 6379
