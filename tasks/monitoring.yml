@@ -29,10 +29,34 @@
   when: watchtower_created.changed
   notify: liquibase watchtower
 
-- name: Abiquo Emmett config file
-  template: src=emmett.properties.j2 dest=/etc/abiquo/watchtower/emmett.properties
-  notify: restart emmett
+- name: Abiquo Watchtower properties file
+  template: src=abiquo.properties.j2 dest=/etc/abiquo/watchtower/watchtower.properties
+  notify:
+    - restart emmett
+    - restart delorean
 
-- name: Abiquo Delorean config file
-  template: src=delorean.properties.j2 dest=/etc/abiquo/watchtower/delorean.properties
-  notify: restart delorean
+- stat:
+    path: "/etc/abiquo/watchtower/{{ item }}.properties"
+  with_items:
+    - emmett
+    - delorean
+  register: sym
+
+- name: Delete original properties files
+  file:
+    path: "/etc/abiquo/watchtower/{{ item.item }}.properties"
+    state: absent
+  when: item.stat.isreg
+  with_items: "{{ sym.results }}"
+
+- name: Abiquo Watchtower services config file
+  file:
+    dest: "/etc/abiquo/watchtower/{{ item }}.properties"
+    src: /etc/abiquo/watchtower/watchtower.properties
+    state: link
+  with_items:
+    - emmett
+    - delorean
+  notify:
+    - restart emmett
+    - restart delorean

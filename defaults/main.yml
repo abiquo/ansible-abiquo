@@ -16,7 +16,13 @@ abiquo_monitoring_rabbitmq_username: abiquo
 abiquo_monitoring_rabbitmq_password: abiquo
 abiquo_monitoring_rabbitmq_vhost: /
 
-# Database
+# Watchtower SSL
+monitoring_watchtower_certfile: /etc/pki/abiquo/{{ ansible_fqdn }}.crt
+monitoring_watchtower_keyfile: /etc/pki/abiquo/{{ ansible_fqdn }}.key.pkcs8
+monitoring_watchtower_keyfile_csrfile: /etc/pki/abiquo/{{ ansible_fqdn }}.csr
+watchtower_ssl: false
+
+# Monitoring Database
 abiquo_monitoring_db_user: abiquo
 abiquo_monitoring_db_pass: abiquo
 abiquo_monitoring_db_host: localhost
@@ -40,7 +46,7 @@ ui_config:
   config.endpoint: ""
 
 # KVM
-vm_repository_path: 127.0.0.1:/vm_repo
+vm_repository_path: ''
 abiquo_aim_port: 8889
 abiquo_aim_repository_path: /opt/vm_repository
 abiquo_aim_datastore: /var/lib/virt
@@ -49,6 +55,32 @@ abiquo_aim_autorestore: false
 abiquo_aim_filesystems: ext2,ext3,ext4,nfs,nfs4,xfs,smbf,gfs
 abiquo_aim_ifconfig_cmd: /sbin/ifconfig
 abiquo_aim_brctl_cmd: /usr/sbin/brctl
+abiquo_aim_include_neutron: no
+abiquo_aim_neutron_rabbit_userid: abiquo
+abiquo_aim_neutron_rabbit_password: abiquo
+abiquo_aim_neutron_rabbit_host: localhost
+abiquo_aim_neutron_auth_uri: http://localhost:5000/v2.0
+abiquo_aim_neutron_identity_uri: http://localhost:35357
+abiquo_aim_neutron_admin_tenant_name: services
+abiquo_aim_neutron_admin_user: neutron
+abiquo_aim_neutron_admin_password: xabiquo
+abiquo_aim_neutron_vlan_ranges: abq-vlans:2:4094
+abiquo_aim_neutron_interface_mappings: external:eth0,abq-vlans:eth1
+
+# RabbitMQ
+rabbitmq_plugins:
+  - rabbitmq_management
+rabbitmq_ssl: false
+rabbitmq_selfsigned: true
+rabbitmq_conf_tcp_listeners_address: ''
+rabbitmq_conf_tcp_listeners_port: 5672
+rabbitmq_conf_ssl_listeners_address: '0.0.0.0'
+rabbitmq_conf_ssl_listeners_port: 5671
+rabbitmq_conf_ssl_options_cacertfile: "/etc/rabbitmq/ssl/{{ ansible_fqdn }}.crt"
+rabbitmq_conf_ssl_options_certfile: "/etc/rabbitmq/ssl/{{ ansible_fqdn }}.crt"
+rabbitmq_conf_ssl_options_csrfile: "/etc/rabbitmq/ssl/{{ ansible_fqdn }}.csr"
+rabbitmq_conf_ssl_options_keyfile: "/etc/rabbitmq/ssl/{{ ansible_fqdn }}.key"
+rabbitmq_conf_ssl_options_fail_if_no_peer_cert: "false"
 
 # KairosDB
 abiquo_monitoring_kairosdb_address: localhost
@@ -65,28 +97,6 @@ kariosdb_cassandra_rpc_port: 9160
 kariosdb_cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"
 
 # Abiquo
-abiquo_default_properties:
-  abiquo.auth.module: abiquo
-  abiquo.datacenter.id: "{{ ansible_hostname }}"
-  abiquo.server.sessionTimeout: 60
-  abiquo.server.api.location: "https://{{ ansible_fqdn }}/api"
-  abiquo.redis.port: 6379
-  abiquo.redis.host: 127.0.0.1
-  abiquo.rabbitmq.addresses: "{{ abiquo_rabbitmq_addresses }}"
-  abiquo.rabbitmq.password: "{{ abiquo_rabbitmq_password }}"
-  abiquo.rabbitmq.username: "{{ abiquo_rabbitmq_username }}"
-  abiquo.rabbitmq.virtualHost: "{{ abiquo_rabbitmq_vhost }}"
-  abiquo.server.mail.server: 127.0.0.1
-  abiquo.server.mail.password: none
-  abiquo.server.mail.user: none@none.es
-  abiquo.m.identity: default_outbound_api_user
-  abiquo.m.credential: "{{ abiquo_default_outbound_api_user_password.stdout }}"
-  abiquo.m.instanceid: "{{ ansible_hostname }}"
-  abiquo.appliancemanager.localRepositoryPath: /opt/vm_repository
-  abiquo.appliancemanager.repositoryLocation: 127.0.0.1:/opt/vm_repository
-  abiquo.virtualfactory.hyperv.repositoryLocation: //127.0.0.1/vm_repository
-  abiquo.virtualfactory.xenserver.repositoryLocation: 127.0.0.1:/opt/vm_repository
-  abiquo.nodecollector.timeout: 180000
 abiquo_properties: {}
 
 # Reporting

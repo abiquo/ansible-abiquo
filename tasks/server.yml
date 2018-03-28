@@ -2,9 +2,7 @@
 - name: Install Abiquo packages for an API server
   yum: name={{ item }} state=present
   with_items:
-    - abiquo-api
-    - abiquo-m
-    - abiquo-model
+    - abiquo-server
     - abiquo-sosreport-plugins
 
 - name: Ensure abiquo/config folder exists

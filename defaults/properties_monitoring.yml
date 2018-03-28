@@ -1,0 +1,38 @@
+---
+abiquo_default_properties:
+  emmett.database.url: "jdbc:mysql://{{ abiquo_monitoring_db_host }}:{{ abiquo_monitoring_db_port }}/watchtower"
+  emmett.database.username: "{{ abiquo_monitoring_db_user }}"
+  emmett.database.password: "{{ abiquo_monitoring_db_pass }}"
+  emmett.kairosdb.host: "{{ abiquo_monitoring_kairosdb_address }}"
+  emmett.kairosdb.port: "{{ abiquo_monitoring_kairosdb_port }}"
+  emmett.amqp.alarmEvaluationExchange: watchtower.alarms.evaluation
+  emmett.amqp.alarmEvaluationRoutingKey: watchtower.alarm.evaluation
+  delorean.numberOfEvaluateAlarmWorkers: 10
+  delorean.alarmEvaluateWorkersParallelism: 2
+  delorean.alarmPublisherMaxBufferSize: 20
+  delorean.kairosOperationTimeoutMs: 30000
+  delorean.sqlOperationTimeoutMs: 30000
+  delorean.database.url: "jdbc:mysql://{{ abiquo_monitoring_db_host }}:{{ abiquo_monitoring_db_port }}/watchtower"
+  delorean.database.username: "{{ abiquo_monitoring_db_user }}"
+  delorean.database.password: "{{ abiquo_monitoring_db_pass }}"
+  delorean.kairosdb.host: "{{ abiquo_monitoring_kairosdb_address }}"
+  delorean.kairosdb.port: "{{ abiquo_monitoring_kairosdb_port }}"
+  delorean.amqp.alarmEvaluationExchange: watchtower.alarms.evaluation
+  delorean.amqp.alarmEvaluationRoutingKey: watchtower.alarm.evaluation
+  delorean.amqp.alarmEvaluationQueue: watchtower.alarm.evaluation
+  delorean.amqp.alarmNotificationExchange: watchtower.alarms.notification
+  delorean.amqp.alarmNotificationRoutingKey: watchtower.alarm.notificacion
+  akka.loglevel: INFO
+  akka.log-dead-letters: 10
+  akka.log-dead-letters-during-shutdown: "on"
+  akka.actor.debug.autorecive: "off"
+  akka.actor.debug.lifecycle: "off"
+  akka.actor.debug.unhandled: "on"
+  akka.actor.debug.event-stream: "off"
+  abiquo.rabbitmq.addresses: "{{ abiquo_monitoring_rabbitmq_addresses }}"
+  abiquo.rabbitmq.username: "{{ abiquo_monitoring_rabbitmq_username }}"
+  abiquo.rabbitmq.password: "{{ abiquo_monitoring_rabbitmq_password }}"
+  abiquo.rabbitmq.virtualHost: "{{ abiquo_monitoring_rabbitmq_vhost }}"
+  abiquo.rabbitmq.networkRecoveryInterval: 5000
+  abiquo.rabbitmq.connectionTimeout: 0
+  abiquo.rabbitmq.requestedHeartBeat: 0

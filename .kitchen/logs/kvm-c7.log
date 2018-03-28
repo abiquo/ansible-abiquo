@@ -1,0 +1,137 @@
+I, [2018-03-28T11:16:46.748899 #64192]  INFO -- kvm-c7: -----> Setting up <kvm-c7>...
+I, [2018-03-28T11:16:46.750221 #64192]  INFO -- kvm-c7: Finished setting up <kvm-c7> (0m0.00s).
+I, [2018-03-28T11:16:46.750313 #64192]  INFO -- kvm-c7: -----> Verifying <kvm-c7>...
+I, [2018-03-28T11:16:46.752411 #64192]  INFO -- kvm-c7: Preparing files for transfer
+I, [2018-03-28T11:16:47.681730 #64192]  INFO -- kvm-c7: -----> Busser installation detected (busser)
+I, [2018-03-28T11:16:48.018312 #64192]  INFO -- kvm-c7: -----> Busser plugin detected: busser-serverspec
+I, [2018-03-28T11:16:48.568311 #64192]  INFO -- kvm-c7: Removing /tmp/verifier/suites/serverspec
+I, [2018-03-28T11:16:48.573940 #64192]  INFO -- kvm-c7: Transferring files to <kvm-c7>
+I, [2018-03-28T11:16:48.811016 #64192]  INFO -- kvm-c7: -----> Running serverspec test suite
+I, [2018-03-28T11:16:48.887855 #64192]  INFO -- kvm-c7: /opt/chef/embedded/bin/ruby -I/tmp/verifier/suites/serverspec -I/tmp/verifier/gems/gems/rspec-support-3.7.1/lib:/tmp/verifier/gems/gems/rspec-core-3.7.1/lib /opt/chef/embedded/bin/rspec --pattern /tmp/verifier/suites/serverspec/\*\*/\*_spec.rb --color --format documentation --default-path /tmp/verifier/suites/serverspec
+I, [2018-03-28T11:16:49.314217 #64192]  INFO -- kvm-c7: 
+I, [2018-03-28T11:16:49.314293 #64192]  INFO -- kvm-c7: KVM configuration
+I, [2018-03-28T11:16:49.885893 #64192]  INFO -- kvm-c7: [32m  has the epel repos installed[0m
+I, [2018-03-28T11:16:51.033421 #64192]  INFO -- kvm-c7: [32m  has the yum repositories configured[0m
+I, [2018-03-28T11:16:51.047135 #64192]  INFO -- kvm-c7: [32m  has the aim configuration file[0m
+I, [2018-03-28T11:16:51.053134 #64192]  INFO -- kvm-c7: [32m  has the /opt/vm_repository directory[0m
+I, [2018-03-28T11:16:51.058927 #64192]  INFO -- kvm-c7: [32m  has the libvirt configuration file[0m
+I, [2018-03-28T11:16:51.636443 #64192]  INFO -- kvm-c7: [32m  has the centos-openstack-pike repos installed[0m
+I, [2018-03-28T11:16:51.649279 #64192]  INFO -- kvm-c7: [32m  has the neutron configuration files[0m
+I, [2018-03-28T11:16:51.667273 #64192]  INFO -- kvm-c7: [32m  has the linuxbridge agent configuration files[0m
+I, [2018-03-28T11:16:51.685760 #64192]  INFO -- kvm-c7: [32m  has the ml2 agent configuration files[0m
+I, [2018-03-28T11:16:51.685831 #64192]  INFO -- kvm-c7: 
+I, [2018-03-28T11:16:51.685854 #64192]  INFO -- kvm-c7: KVM packages
+I, [2018-03-28T11:16:51.695245 #64192]  INFO -- kvm-c7: [32m  has the qemu binary in place[0m
+I, [2018-03-28T11:16:51.766016 #64192]  INFO -- kvm-c7: [32m  has the abiquo packages installed[0m
+I, [2018-03-28T11:16:51.865486 #64192]  INFO -- kvm-c7: [32m  has the neutron packages installed[0m
+I, [2018-03-28T11:16:51.865559 #64192]  INFO -- kvm-c7: 
+I, [2018-03-28T11:16:51.865585 #64192]  INFO -- kvm-c7: KVM packages for CentOS 7
+I, [2018-03-28T11:16:51.938065 #64192]  INFO -- kvm-c7: [32m  has the seabios backport installed[0m
+I, [2018-03-28T11:16:51.938136 #64192]  INFO -- kvm-c7: 
+I, [2018-03-28T11:16:51.938161 #64192]  INFO -- kvm-c7: KVM services
+I, [2018-03-28T11:16:51.958739 #64192]  INFO -- kvm-c7: [32m  has the cron service running[0m
+I, [2018-03-28T11:16:51.969228 #64192]  INFO -- kvm-c7: [32m  has selinux configured as permissive[0m
+I, [2018-03-28T11:16:51.996209 #64192]  INFO -- kvm-c7: [31m  has the basic firewall rules configured (FAILED - 1)[0m
+I, [2018-03-28T11:16:52.005296 #64192]  INFO -- kvm-c7: [31m  has the kvm firewall rules configured (FAILED - 2)[0m
+I, [2018-03-28T11:16:52.021932 #64192]  INFO -- kvm-c7: [31m  has the rpcbind service running (FAILED - 3)[0m
+I, [2018-03-28T11:16:52.039245 #64192]  INFO -- kvm-c7: [32m  has the libvirtd service running[0m
+I, [2018-03-28T11:16:52.065404 #64192]  INFO -- kvm-c7: [32m  has the abiquo-aim service running[0m
+I, [2018-03-28T11:16:52.073374 #64192]  INFO -- kvm-c7: [32m  has the linuxbridge agent running[0m
+I, [2018-03-28T11:16:52.085773 #64192]  INFO -- kvm-c7: [32m  has loaded the br_nbetfilter kernel module[0m
+I, [2018-03-28T11:16:52.101978 #64192]  INFO -- kvm-c7: [32m  has iptables enabled on bridged interfaces[0m
+I, [2018-03-28T11:16:52.126007 #64192]  INFO -- kvm-c7: 
+I, [2018-03-28T11:16:52.126069 #64192]  INFO -- kvm-c7: Failures:
+I, [2018-03-28T11:16:52.126105 #64192]  INFO -- kvm-c7: 
+I, [2018-03-28T11:16:52.126139 #64192]  INFO -- kvm-c7:   1) KVM services has the basic firewall rules configured
+I, [2018-03-28T11:16:52.126173 #64192]  INFO -- kvm-c7:      [31mFailure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }[0m
+I, [2018-03-28T11:16:52.126201 #64192]  INFO -- kvm-c7:      [31m  expected iptables to have rule "-A INPUT -i lo -j ACCEPT"[0m
+I, [2018-03-28T11:16:52.126234 #64192]  INFO -- kvm-c7:      [31m  /bin/sh -c iptables\ -S\ \|\ grep\ --\ -A\\\ INPUT\\\ -i\\\ lo\\\ -j\\\ ACCEPT[0m
+I, [2018-03-28T11:16:52.126260 #64192]  INFO -- kvm-c7:      [31m  [0m
+I, [2018-03-28T11:16:52.126284 #64192]  INFO -- kvm-c7:      [31m[37mShared Example Group: "common::services" called from /tmp/verifier/suites/serverspec/kvm_services_spec.rb:18[0m[0m
+I, [2018-03-28T11:16:52.126306 #64192]  INFO -- kvm-c7:      [36m# /tmp/kitchen/roles/ansible-abiquo/test/integration/common/services.rb:26:in `block (2 levels) in <top (required)>'[0m
+I, [2018-03-28T11:16:52.126330 #64192]  INFO -- kvm-c7: 
+I, [2018-03-28T11:16:52.126352 #64192]  INFO -- kvm-c7:   2) KVM services has the kvm firewall rules configured
+I, [2018-03-28T11:16:52.126373 #64192]  INFO -- kvm-c7:      [31mFailure/Error: expect(iptables).to have_rule('-A INPUT -p tcp -m tcp --dport 8889 -j ACCEPT')[0m
+I, [2018-03-28T11:16:52.126394 #64192]  INFO -- kvm-c7:      [31m  expected iptables to have rule "-A INPUT -p tcp -m tcp --dport 8889 -j ACCEPT"[0m
+I, [2018-03-28T11:16:52.126415 #64192]  INFO -- kvm-c7:      [31m  /bin/sh -c iptables\ -S\ \|\ grep\ --\ -A\\\ INPUT\\\ -p\\\ tcp\\\ -m\\\ tcp\\\ --dport\\\ 8889\\\ -j\\\ ACCEPT[0m
+I, [2018-03-28T11:16:52.126436 #64192]  INFO -- kvm-c7:      [31m  [0m
+I, [2018-03-28T11:16:52.126456 #64192]  INFO -- kvm-c7:      [36m# /tmp/verifier/suites/serverspec/kvm_services_spec.rb:21:in `block (2 levels) in <top (required)>'[0m
+I, [2018-03-28T11:16:52.126475 #64192]  INFO -- kvm-c7: 
+I, [2018-03-28T11:16:52.126495 #64192]  INFO -- kvm-c7:   3) KVM services has the rpcbind service running
+I, [2018-03-28T11:16:52.126514 #64192]  INFO -- kvm-c7:      [31mFailure/Error: expect(service('rpcbind')).to be_running[0m
+I, [2018-03-28T11:16:52.126534 #64192]  INFO -- kvm-c7:      [31m  expected Service "rpcbind" to be running[0m
+I, [2018-03-28T11:16:52.126553 #64192]  INFO -- kvm-c7:      [31m  /bin/sh -c systemctl\ is-active\ rpcbind[0m
+I, [2018-03-28T11:16:52.126572 #64192]  INFO -- kvm-c7:      [31m  inactive
+I, [2018-03-28T11:16:52.126591 #64192]  INFO -- kvm-c7: [0m
+I, [2018-03-28T11:16:52.126610 #64192]  INFO -- kvm-c7:      [36m# /tmp/verifier/suites/serverspec/kvm_services_spec.rb:29:in `block (2 levels) in <top (required)>'[0m
+I, [2018-03-28T11:16:52.126630 #64192]  INFO -- kvm-c7: 
+I, [2018-03-28T11:16:52.126649 #64192]  INFO -- kvm-c7: Finished in 2.79 seconds (files took 0.37711 seconds to load)
+I, [2018-03-28T11:16:52.126684 #64192]  INFO -- kvm-c7: [31m23 examples, 3 failures[0m
+I, [2018-03-28T11:16:52.126704 #64192]  INFO -- kvm-c7: 
+I, [2018-03-28T11:16:52.126723 #64192]  INFO -- kvm-c7: Failed examples:
+I, [2018-03-28T11:16:52.126741 #64192]  INFO -- kvm-c7: 
+I, [2018-03-28T11:16:52.126760 #64192]  INFO -- kvm-c7: [31mrspec /tmp/verifier/suites/serverspec/kvm_services_spec.rb[1:3][0m [36m# KVM services has the basic firewall rules configured[0m
+I, [2018-03-28T11:16:52.126780 #64192]  INFO -- kvm-c7: [31mrspec /tmp/verifier/suites/serverspec/kvm_services_spec.rb:20[0m [36m# KVM services has the kvm firewall rules configured[0m
+I, [2018-03-28T11:16:52.126800 #64192]  INFO -- kvm-c7: [31mrspec /tmp/verifier/suites/serverspec/kvm_services_spec.rb:27[0m [36m# KVM services has the rpcbind service running[0m
+I, [2018-03-28T11:16:52.133964 #64192]  INFO -- kvm-c7: 
+I, [2018-03-28T11:16:52.137545 #64192]  INFO -- kvm-c7: /opt/chef/embedded/bin/ruby -I/tmp/verifier/suites/serverspec -I/tmp/verifier/gems/gems/rspec-support-3.7.1/lib:/tmp/verifier/gems/gems/rspec-core-3.7.1/lib /opt/chef/embedded/bin/rspec --pattern /tmp/verifier/suites/serverspec/\*\*/\*_spec.rb --color --format documentation --default-path /tmp/verifier/suites/serverspec failed
+I, [2018-03-28T11:16:52.143700 #64192]  INFO -- kvm-c7: !!!!!! Ruby Script [/tmp/verifier/gems/gems/busser-serverspec-0.5.10/lib/busser/runner_plugin/../serverspec/runner.rb /tmp/verifier/suites/serverspec] exit code was 1
+E, [2018-03-28T11:16:52.148491 #64192] ERROR -- kvm-c7: Verify failed on instance <kvm-c7>.
+E, [2018-03-28T11:16:52.148591 #64192] ERROR -- kvm-c7: ------Exception-------
+E, [2018-03-28T11:16:52.148616 #64192] ERROR -- kvm-c7: Class: Kitchen::ActionFailed
+E, [2018-03-28T11:16:52.148634 #64192] ERROR -- kvm-c7: Message: SSH exited (1) for command: [sh -c '
+TEST_KITCHEN="1"; export TEST_KITCHEN
+BUSSER_ROOT="/tmp/verifier"; export BUSSER_ROOT
+GEM_HOME="/tmp/verifier/gems"; export GEM_HOME
+GEM_PATH="/tmp/verifier/gems"; export GEM_PATH
+GEM_CACHE="/tmp/verifier/gems/cache"; export GEM_CACHE
+
+sudo -E /tmp/verifier/bin/busser test serverspec
+']
+E, [2018-03-28T11:16:52.148651 #64192] ERROR -- kvm-c7: ----------------------
+E, [2018-03-28T11:16:52.148668 #64192] ERROR -- kvm-c7: ------Backtrace-------
+E, [2018-03-28T11:16:52.148684 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/verifier/base.rb:80:in `rescue in call'
+E, [2018-03-28T11:16:52.148718 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/verifier/base.rb:83:in `call'
+E, [2018-03-28T11:16:52.148734 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:443:in `block in verify_action'
+E, [2018-03-28T11:16:52.148751 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:536:in `synchronize_or_call'
+E, [2018-03-28T11:16:52.148767 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:498:in `block in action'
+E, [2018-03-28T11:16:52.148783 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/rubies/ruby-2.3.3/lib/ruby/2.3.0/benchmark.rb:293:in `measure'
+E, [2018-03-28T11:16:52.148799 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:497:in `action'
+E, [2018-03-28T11:16:52.148814 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:435:in `verify_action'
+E, [2018-03-28T11:16:52.148831 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:368:in `block in transition_to'
+E, [2018-03-28T11:16:52.148855 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:367:in `each'
+E, [2018-03-28T11:16:52.148871 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:367:in `transition_to'
+E, [2018-03-28T11:16:52.148886 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:157:in `verify'
+E, [2018-03-28T11:16:52.148902 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/command.rb:197:in `public_send'
+E, [2018-03-28T11:16:52.148918 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/command.rb:197:in `run_action_in_thread'
+E, [2018-03-28T11:16:52.148934 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/command.rb:169:in `block (2 levels) in run_action'
+E, [2018-03-28T11:16:52.148950 #64192] ERROR -- kvm-c7: ----End Backtrace-----
+E, [2018-03-28T11:16:52.148965 #64192] ERROR -- kvm-c7: ---Nested Exception---
+E, [2018-03-28T11:16:52.148999 #64192] ERROR -- kvm-c7: Class: Kitchen::Transport::SshFailed
+E, [2018-03-28T11:16:52.149016 #64192] ERROR -- kvm-c7: Message: SSH exited (1) for command: [sh -c '
+TEST_KITCHEN="1"; export TEST_KITCHEN
+BUSSER_ROOT="/tmp/verifier"; export BUSSER_ROOT
+GEM_HOME="/tmp/verifier/gems"; export GEM_HOME
+GEM_PATH="/tmp/verifier/gems"; export GEM_PATH
+GEM_CACHE="/tmp/verifier/gems/cache"; export GEM_CACHE
+
+sudo -E /tmp/verifier/bin/busser test serverspec
+']
+E, [2018-03-28T11:16:52.149033 #64192] ERROR -- kvm-c7: ----------------------
+E, [2018-03-28T11:16:52.149048 #64192] ERROR -- kvm-c7: ------Backtrace-------
+E, [2018-03-28T11:16:52.149063 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/verifier/base.rb:80:in `rescue in call'
+E, [2018-03-28T11:16:52.149079 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/verifier/base.rb:83:in `call'
+E, [2018-03-28T11:16:52.149095 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:443:in `block in verify_action'
+E, [2018-03-28T11:16:52.149110 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:536:in `synchronize_or_call'
+E, [2018-03-28T11:16:52.149126 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:498:in `block in action'
+E, [2018-03-28T11:16:52.149141 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/rubies/ruby-2.3.3/lib/ruby/2.3.0/benchmark.rb:293:in `measure'
+E, [2018-03-28T11:16:52.149157 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:497:in `action'
+E, [2018-03-28T11:16:52.149173 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:435:in `verify_action'
+E, [2018-03-28T11:16:52.149189 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:368:in `block in transition_to'
+E, [2018-03-28T11:16:52.149213 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:367:in `each'
+E, [2018-03-28T11:16:52.149228 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:367:in `transition_to'
+E, [2018-03-28T11:16:52.149243 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/instance.rb:157:in `verify'
+E, [2018-03-28T11:16:52.149257 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/command.rb:197:in `public_send'
+E, [2018-03-28T11:16:52.149272 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/command.rb:197:in `run_action_in_thread'
+E, [2018-03-28T11:16:52.149287 #64192] ERROR -- kvm-c7: /Users/marc/.rvm/gems/ruby-2.3.3@ansible-abiquo/gems/test-kitchen-1.20.0/lib/kitchen/command.rb:169:in `block (2 levels) in run_action'
+E, [2018-03-28T11:16:52.149302 #64192] ERROR -- kvm-c7: ----End Backtrace-----

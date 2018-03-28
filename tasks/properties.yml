@@ -2,3 +2,6 @@
 - name: Abiquo properties
   template: src=abiquo.properties.j2 dest=/opt/abiquo/config/abiquo.properties
   notify: restart abiquo-tomcat
+
+- name: Start Abiquo Tomcat
+  service: name=abiquo-tomcat state=started enabled=yes

@@ -1,14 +1,25 @@
 ---
+- name: Get default properties
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "defaults/properties_{{ abiquo_profile }}.yml"
+    - defaults/default_properties.yml
+
 - include_tasks: repository.yml
 
 - include_tasks: selfsigned.yml
+  vars:
+    cert_file: "{{ ui_cert_file }}"
+    key_file: "{{ ui_cert_key_file }}"
+    csr_file: "{{ ui_cert_csr_file }}"
+    cert_cn: "{{ ui_server_name }}"
   when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'frontend') and ui_cert_source == 'selfsigned'
 
 - include_tasks: frontend.yml
   when: abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'frontend'
 
 - include_tasks: apache.yml
-  when: abiquo_profile == 'monolithic'
+  when: abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'frontend'
 
 - include_tasks: mariadb.yml
   when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'monitoring') and abiquo_install_services
@@ -18,6 +29,15 @@
 
 - include_tasks: rabbitmq.yml
   when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server') and abiquo_install_services
+
+- include_tasks: selfsigned.yml
+  vars:
+    cert_file: "{{ rabbitmq_conf_ssl_options_certfile }}"
+    key_file: "{{ rabbitmq_conf_ssl_options_keyfile }}"
+    csr_file: "{{ rabbitmq_conf_ssl_options_csrfile }}"
+    cert_cn: "{{ ansible_fqdn }}"
+    cert_for_rabbit: yes
+  when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server') and abiquo_install_services and rabbitmq_selfsigned
 
 - include_tasks: redis.yml
   when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'remoteservices') and abiquo_install_services
@@ -36,6 +56,15 @@
 
 - include_tasks: v2v.yml
   when: abiquo_profile == 'monolithic' or abiquo_profile == 'v2v'
+
+- include_tasks: selfsigned.yml
+  vars:
+    cert_file: "{{ monitoring_watchtower_certfile }}"
+    key_file: "{{ monitoring_watchtower_keyfile }}"
+    csr_file: "{{ monitoring_watchtower_keyfile_csrfile }}"
+    cert_cn: "{{ ansible_fqdn }}"
+    cert_for_rabbit: yes
+  when: abiquo_profile == 'monitoring' and watchtower_ssl
 
 - include_tasks: monitoring.yml
   when: abiquo_profile == 'monitoring'

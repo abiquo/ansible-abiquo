@@ -10,5 +10,10 @@
   notify:
     - restart kairosdb
 
+- name: Wait for Cassandra
+  wait_for:
+    host: "{{ kariosdb_cassandra_rpc_address }}"
+    port: "{{ kariosdb_cassandra_rpc_port }}"
+
 - name: Start KairosDB service
   service: name=kairosdb state=started enabled=yes

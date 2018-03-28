@@ -56,6 +56,12 @@
 
 - name: restart cassandra
   service: name=cassandra state=restarted
+  notify: wait for cassandra
+
+- name: wait for cassandra
+  wait_for:
+    host: "{{ cassandra_rpc_address }}"
+    port: "{{ cassandra_rpc_port }}"
 
 - name: restart kairosdb
   service: name=kairosdb state=restarted
@@ -72,22 +78,8 @@
 - name: Start Redis Server
   service: name=redis state=started enabled=yes
 
+- name: restart rabbitmq
+  service: name=rabbitmq-server state=restarted
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- name: restart neutron-linuxbridge-agent
+  service: name=neutron-linuxbridge-agent state=restarted
