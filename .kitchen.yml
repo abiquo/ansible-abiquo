@@ -9,14 +9,12 @@ provisioner:
   require_ansible_repo: true
   ansible_verbose: true
   ansible_version: latest
+  requirements_path: requirements.yml
 
 transport:
   compression: none
 
 platforms:
-  - name: c6
-    driver:
-      box: bento/centos-6
   - name: c7
     driver:
       box: bento/centos-7
@@ -57,5 +55,3 @@ suites:
       hosts: kvm
     driver_config:
       hostname: 'kvm'
-    excludes:
-      - c6

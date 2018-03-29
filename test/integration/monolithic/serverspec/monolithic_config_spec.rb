@@ -41,8 +41,8 @@ describe 'Monolithic configuration' do
   end
 
   it 'has DB properly configured' do
-    expect(file('/opt/abiquo/tomcat/conf/Catalina/localhost/api.xml')).to contain('username="root" password=""')
-    expect(file('/opt/abiquo/tomcat/conf/Catalina/localhost/m.xml')).to contain('username="root" password=""')
+    expect(file('/opt/abiquo/tomcat/conf/Catalina/localhost/api.xml')).to contain('username="abiquo" password="abiquo"')
+    expect(file('/opt/abiquo/tomcat/conf/Catalina/localhost/m.xml')).to contain('username="abiquo" password="abiquo"')
   end
 
   it 'has the sudoers file for the nfs plugin' do

@@ -1,9 +1,9 @@
 ---
-- name: Get default properties
+- name: Get default vars
   include_vars: "{{ item }}"
   with_first_found:
-    - "defaults/properties_{{ abiquo_profile }}.yml"
-    - defaults/default_properties.yml
+    - "defaults/{{ abiquo_profile }}.yml"
+    - defaults/default.yml
 
 - include_tasks: repository.yml
 
@@ -63,7 +63,6 @@
     key_file: "{{ monitoring_watchtower_keyfile }}"
     csr_file: "{{ monitoring_watchtower_keyfile_csrfile }}"
     cert_cn: "{{ ansible_fqdn }}"
-    cert_for_rabbit: yes
   when: abiquo_profile == 'monitoring' and watchtower_ssl
 
 - include_tasks: monitoring.yml
@@ -80,3 +79,5 @@
 
 - include_tasks: reporting.yml
   when: abiquo_profile == 'reporting'
+
+- include_tasks: firewall.yml

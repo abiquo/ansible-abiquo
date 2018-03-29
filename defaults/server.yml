@@ -15,8 +15,11 @@ abiquo_default_properties:
   abiquo.m.identity: default_outbound_api_user
   abiquo.m.credential: "{{ abiquo_default_outbound_api_user_password.stdout }}"
   abiquo.m.instanceid: "{{ ansible_hostname }}"
-  abiquo.datacenter.id: "{{ ansible_hostname }}"
-  abiquo.appliancemanager.localRepositoryPath: /opt/vm_repository
-  abiquo.appliancemanager.repositoryLocation: 127.0.0.1:/opt/vm_repository
-  abiquo.virtualfactory.hyperv.repositoryLocation: //127.0.0.1/vm_repository
-  abiquo.virtualfactory.xenserver.repositoryLocation: 127.0.0.1:/opt/vm_repository
+abiquo_fw_allowed_ports:
+  - "80"
+  - "443"
+  - "8009"
+  - "8010"
+  - "3306"
+  - "5672"
+  - "15672"

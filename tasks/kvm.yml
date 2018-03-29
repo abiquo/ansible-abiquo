@@ -64,6 +64,7 @@
   with_items:
     - libvirtd
     - abiquo-aim
+    - rpcbind
 
 - name: Include neutron packages if requested
   include_tasks: kvm_neutron.yml

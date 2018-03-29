@@ -36,3 +36,8 @@ abiquo_default_properties:
   abiquo.rabbitmq.networkRecoveryInterval: 5000
   abiquo.rabbitmq.connectionTimeout: 0
   abiquo.rabbitmq.requestedHeartBeat: 0
+abiquo_fw_allowed_ports:
+  - "36638"
+  - "{{ cassandra_rpc_port }}"
+  - "7000"
+  - "{{ abiquo_monitoring_kairosdb_port }}"

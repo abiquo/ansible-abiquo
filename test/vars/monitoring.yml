@@ -20,7 +20,8 @@ abiquo_properties:
   abiquo.rabbitmq.tls: "true"
   emmett.service.ssl: "true"
   emmett.service.certfile: "{{ monitoring_watchtower_certfile }}"
-  emmett.service.keyfile: "{{ monitoring_watchtower_keyfile }}"
+  emmett.service.keyfile: "{{ monitoring_watchtower_keyfile }}.pkcs8"
 abiquo_monitoring_rabbitmq_addresses: localhost:5671
 abiquo_monitoring_rabbitmq_username: guest
 abiquo_monitoring_rabbitmq_password: guest
+watchtower_ssl: true

@@ -8,3 +8,6 @@ abiquo_default_properties:
   abiquo.rabbitmq.password: "{{ abiquo_rabbitmq_password }}"
   abiquo.rabbitmq.username: "{{ abiquo_rabbitmq_username }}"
   abiquo.rabbitmq.virtualHost: "{{ abiquo_rabbitmq_vhost }}"
+abiquo_fw_allowed_ports:
+  - "8009"
+  - "8010"

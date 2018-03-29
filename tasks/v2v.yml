@@ -8,3 +8,9 @@
 
 - name: Ensure abiquo/config folder exists
   file: path=/opt/abiquo/config state=directory
+
+- name: Start services
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - abiquo-tomcat
+    - rpcbind

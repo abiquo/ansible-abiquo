@@ -4,6 +4,7 @@
   with_items:
     - abiquo-server
     - abiquo-sosreport-plugins
+  register: pkginstall
 
 - name: Ensure abiquo/config folder exists
   file: path=/opt/abiquo/config state=directory
@@ -32,6 +33,18 @@
     target: /usr/share/doc/abiquo-model/database/kinton-schema.sql
   when: kinton_created.changed
 
+- name: Set DB configuration in tomcat
+  template:
+    src: api-m.xml.j2
+    dest: /opt/abiquo/tomcat/conf/Catalina/localhost/{{ item }}.xml
+    owner: tomcat
+    group: tomcat
+    mode: 0644
+  with_items:
+    - api
+    - m
+  notify: restart abiquo-tomcat
+
 - name: Obtain m_user default password
   shell: mysql kinton -Nse "select COMMENTS from DATABASECHANGELOG where ID = 'default_user_for_m'"
   register: abiquo_default_outbound_api_user_password
@@ -45,6 +58,7 @@
 - name: Run liquibase update
   shell: abiquo-db -h {{ abiquo_db_host }} -u {{ abiquo_db_user }} -p {{ abiquo_db_pass }} -P {{ abiquo_db_port }} update
   notify: restart abiquo-tomcat
+  when: pkginstall.changed or kinton_created.changed
 
 - name: Import SSL certificate from API endpoint into Java keystore
   java_cert:

@@ -1,4 +1,5 @@
 ---
+abiquo_profile: monolithic
 ui_server_name: frontend.bcn.abiquo.com
 ui_apache_opts:
   KeepAlive: "On"

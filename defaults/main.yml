@@ -6,42 +6,65 @@ abiquo_base_repo: http://mirror.abiquo.com/el$releasever/{{ abiquo_version }}/os
 abiquo_updates_repo: http://mirror.abiquo.com/el$releasever/{{ abiquo_version }}/updates/x86_64
 abiquo_repository_gpg_check: 1
 
+# Server database access config.
+abiquo_db_user: abiquo
+abiquo_db_pass: abiquo
+abiquo_db_host: localhost
+abiquo_db_port: 3306
+abiquo_db_from: '%'
+
+# RabbitMQ access config
+abiquo_rabbitmq_addresses: 127.0.0.1:5672
+abiquo_rabbitmq_password: abiquo
+abiquo_rabbitmq_username: abiquo
+abiquo_rabbitmq_vhost: /
+
+# Abiquo properties
+# A set of default properties is used based on selected profile
+# using `defaults/{{profile}}.yml`. This is to specify additional
+# properties that will be merged with defaults.
+abiquo_properties: {}
+
+# Services refer to supporting services like MariaDB,
+# RabbitMQ, Redis, etc.
 abiquo_install_services: true
+
+# Set to false if you are connecting to an already
+# populated database
 abiquo_install_database: true
+
+# Whether or not to install the frontend (UI)
+# components in a server installation
 abiquo_install_frontend: true
-
-# RabbitMQ
-abiquo_monitoring_rabbitmq_addresses: localhost:5672
-abiquo_monitoring_rabbitmq_username: abiquo
-abiquo_monitoring_rabbitmq_password: abiquo
-abiquo_monitoring_rabbitmq_vhost: /
-
-# Watchtower SSL
-monitoring_watchtower_certfile: /etc/pki/abiquo/{{ ansible_fqdn }}.crt
-monitoring_watchtower_keyfile: /etc/pki/abiquo/{{ ansible_fqdn }}.key.pkcs8
-monitoring_watchtower_keyfile_csrfile: /etc/pki/abiquo/{{ ansible_fqdn }}.csr
-watchtower_ssl: false
-
-# Monitoring Database
-abiquo_monitoring_db_user: abiquo
-abiquo_monitoring_db_pass: abiquo
-abiquo_monitoring_db_host: localhost
-abiquo_monitoring_db_port: 3306
-abiquo_monitoring_db_from: 'localhost'
 
 # Frontend
 ui_server_name: "{{ ansible_fqdn }}"
 ui_server_alias: "{{ ansible_hostname }}"
 ui_proxy_timeout: 3600
+# UI Apache configuration
 ui_apache_opts: {}
 ui_proxies: {}
 
+# Wheter or not to generate a self signed certificate
+# for this host. If not, provide path to certificate,
+# private key and optionally a CA cert. The cookbook
+# does not manage the certificate files path provided
+# for non generated certificates.
+#
+# Set this to any other value will skip selfsigned 
+# cert generation
 ui_cert_source: selfsigned
+
+# When using self signed certificates, these are the paths for
+# the certificate files. Otherwise, they will point to already
+# existing certificates.
 ui_cert_file: /etc/pki/abiquo/{{ ui_server_name }}.crt
 ui_cert_key_file: /etc/pki/abiquo/{{ ui_server_name }}.key
 ui_cert_csr_file: /etc/pki/abiquo/{{ ui_server_name }}.csr
 # ui_cert_ca_file: ...
 
+# UI app configuration attributes. These attributes will be rendered
+# in /var/www/html/ui/config/client-config-custom.json
 ui_config:
   config.endpoint: ""
 
@@ -72,7 +95,7 @@ rabbitmq_plugins:
   - rabbitmq_management
 rabbitmq_ssl: false
 rabbitmq_selfsigned: true
-rabbitmq_conf_tcp_listeners_address: ''
+rabbitmq_conf_tcp_listeners_address: '0.0.0.0'
 rabbitmq_conf_tcp_listeners_port: 5672
 rabbitmq_conf_ssl_listeners_address: '0.0.0.0'
 rabbitmq_conf_ssl_listeners_port: 5671
@@ -86,6 +109,25 @@ rabbitmq_conf_ssl_options_fail_if_no_peer_cert: "false"
 abiquo_monitoring_kairosdb_address: localhost
 abiquo_monitoring_kairosdb_port: 8080
 
+# RabbitMQ configuration for Watchtower
+abiquo_monitoring_rabbitmq_addresses: localhost:5672
+abiquo_monitoring_rabbitmq_username: abiquo
+abiquo_monitoring_rabbitmq_password: abiquo
+abiquo_monitoring_rabbitmq_vhost: /
+
+# Watchtower SSL
+monitoring_watchtower_certfile: /etc/pki/abiquo/{{ ansible_fqdn }}.crt
+monitoring_watchtower_keyfile: /etc/pki/abiquo/{{ ansible_fqdn }}.key
+monitoring_watchtower_keyfile_csrfile: /etc/pki/abiquo/{{ ansible_fqdn }}.csr
+watchtower_ssl: false
+
+# Monitoring Database
+abiquo_monitoring_db_user: abiquo
+abiquo_monitoring_db_pass: abiquo
+abiquo_monitoring_db_host: localhost
+abiquo_monitoring_db_port: 3306
+abiquo_monitoring_db_from: 'localhost'
+
 # Cassandra
 cassandra_cluster_name: abiquo
 cassandra_rpc_port: 9160
@@ -95,9 +137,6 @@ cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"
 kairosdb_config_file_path: /opt/kairosdb/conf/kairosdb.properties
 kariosdb_cassandra_rpc_port: 9160
 kariosdb_cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"
-
-# Abiquo
-abiquo_properties: {}
 
 # Reporting
 # JasperServer
@@ -110,20 +149,6 @@ jasperserver_tomcat_server_proxy_port: 8888
 
 # Reporting ZIP url
 reporting_core_url: nil
-
-# Server
-# Database
-abiquo_db_user: abiquo
-abiquo_db_pass: abiquo
-abiquo_db_host: localhost
-abiquo_db_port: 3306
-abiquo_db_from: '%'
-
-# RabbitMQ
-abiquo_rabbitmq_addresses: 127.0.0.1:5672
-abiquo_rabbitmq_password: abiquo
-abiquo_rabbitmq_username: abiquo
-abiquo_rabbitmq_vhost: /
 
 # MariaDB
 mariadb_config: {}
@@ -189,3 +214,15 @@ default_mariadb_config:
 
   isamchk:
     key_buffer: 16M
+
+# geerlingguy.firewall
+firewall_state: started
+firewall_enabled_at_boot: true
+firewall_disable_firewalld: false
+firewall_disable_ufw: false
+default_firewall_allowed_tcp_ports:
+  - "22"
+default_firewall_additional_rules:
+  - "iptables -P INPUT DROP"
+abiquo_fw_allowed_ports: []
+abiquo_fw_additional_rules: []
