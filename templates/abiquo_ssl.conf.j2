@@ -12,6 +12,8 @@
     ProxyPreserveHost On
     ProxyTimeout {{ ui_proxy_timeout }}
 
+    {{ ui_apache_opts_raw }}
+
 {% for opt, val in ui_apache_opts.iteritems() %}
     {{ opt }} {{ val }}
 {% endfor %}

@@ -56,12 +56,6 @@
 
 - name: restart cassandra
   service: name=cassandra state=restarted
-  notify: wait for cassandra
-
-- name: wait for cassandra
-  wait_for:
-    host: "{{ cassandra_rpc_address }}"
-    port: "{{ cassandra_rpc_port }}"
 
 - name: restart kairosdb
   service: name=kairosdb state=restarted

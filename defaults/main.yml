@@ -6,12 +6,19 @@ abiquo_base_repo: http://mirror.abiquo.com/el$releasever/{{ abiquo_version }}/os
 abiquo_updates_repo: http://mirror.abiquo.com/el$releasever/{{ abiquo_version }}/updates/x86_64
 abiquo_repository_gpg_check: 1
 
+# Credentials for ansible DB access
+abiquo_db_login_host: localhost
+abiquo_db_login_port: 3306
+abiquo_db_login_user: root
+abiquo_db_login_pass: ''
+
 # Server database access config.
 abiquo_db_user: abiquo
 abiquo_db_pass: abiquo
 abiquo_db_host: localhost
 abiquo_db_port: 3306
 abiquo_db_from: '%'
+abiquo_jdbc_str: "{{ abiquo_db_host }}:{{ abiquo_db_port }}"
 
 # RabbitMQ access config
 abiquo_rabbitmq_addresses: 127.0.0.1:5672
@@ -43,6 +50,7 @@ ui_server_alias: "{{ ansible_hostname }}"
 ui_proxy_timeout: 3600
 # UI Apache configuration
 ui_apache_opts: {}
+ui_apache_opts_raw: ""
 ui_proxies: {}
 
 # Wheter or not to generate a self signed certificate
@@ -127,11 +135,11 @@ abiquo_monitoring_db_pass: abiquo
 abiquo_monitoring_db_host: localhost
 abiquo_monitoring_db_port: 3306
 abiquo_monitoring_db_from: 'localhost'
+abiquo_monitoring_jdbc_str: "{{ abiquo_db_host }}:{{ abiquo_db_port }}"
+monitoring_install_mariadb: yes
 
 # Cassandra
-cassandra_cluster_name: abiquo
-cassandra_rpc_port: 9160
-cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"
+cassandra_config: {}
 
 # KairosDB
 kairosdb_config_file_path: /opt/kairosdb/conf/kairosdb.properties

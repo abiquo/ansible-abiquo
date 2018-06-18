@@ -5,6 +5,8 @@
     - "defaults/{{ abiquo_profile }}.yml"
     - defaults/default.yml
 
+- include_tasks: firewall.yml
+
 - include_tasks: repository.yml
 
 - include_tasks: selfsigned.yml
@@ -16,13 +18,10 @@
   when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'frontend') and ui_cert_source == 'selfsigned'
 
 - include_tasks: frontend.yml
-  when: abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'frontend'
-
-- include_tasks: apache.yml
-  when: abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'frontend'
+  when: (abiquo_profile == 'monolithic' or abiquo_profile == 'frontend' or abiquo_profile == 'server') and abiquo_install_frontend
 
 - include_tasks: mariadb.yml
-  when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'monitoring') and abiquo_install_services
+  when: ((abiquo_profile == 'monolithic' or abiquo_profile == 'server') and abiquo_install_services) or (abiquo_profile == 'monitoring' and monitoring_install_mariadb)
 
 - include_tasks: database.yml
   when: (abiquo_profile == 'monolithic' or abiquo_profile == 'server' or abiquo_profile == 'monitoring') and abiquo_install_database
@@ -79,5 +78,3 @@
 
 - include_tasks: reporting.yml
   when: abiquo_profile == 'reporting'
-
-- include_tasks: firewall.yml

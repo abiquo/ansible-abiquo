@@ -14,6 +14,7 @@
   wait_for:
     host: "{{ kariosdb_cassandra_rpc_address }}"
     port: "{{ kariosdb_cassandra_rpc_port }}"
+  when: kairosdb_wait_for_cassandra
 
 - name: Start KairosDB service
   service: name=kairosdb state=started enabled=yes

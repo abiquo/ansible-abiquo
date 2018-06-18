@@ -4,6 +4,7 @@
   with_items:
     - abiquo-server
     - abiquo-sosreport-plugins
+    - MariaDB-client
   register: pkginstall
 
 - name: Ensure abiquo/config folder exists
@@ -11,6 +12,17 @@
 
 - name: Ensure fragments folder exists
   file: path=/var/lib/abiquo-fragments state=directory
+
+- set_fact:
+    pwdflag: "-p{{ abiquo_db_pass }}"
+  when: abiquo_db_pass is defined
+
+- set_fact:
+    mysql_command: "mysql -h{{ abiquo_db_host }} -P{{ abiquo_db_port }} -u{{ abiquo_db_user }} {{ pwdflag is defined | ternary(pwdflag,'') }} "
+
+- name: Check kinton DB state
+  shell: "{{ mysql_command }} -Nse \"SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'kinton'\""
+  register: kinton_table_count
 
 - name: Create kinton schema.
   mysql_db:
@@ -31,7 +43,7 @@
     login_user: "{{ abiquo_db_user }}"
     login_password: "{{ abiquo_db_pass }}"
     target: /usr/share/doc/abiquo-model/database/kinton-schema.sql
-  when: kinton_created.changed
+  when: kinton_created.changed or kinton_table_count.stdout == '0'
 
 - name: Set DB configuration in tomcat
   template:
@@ -45,10 +57,6 @@
     - m
   notify: restart abiquo-tomcat
 
-- name: Obtain m_user default password
-  shell: mysql kinton -Nse "select COMMENTS from DATABASECHANGELOG where ID = 'default_user_for_m'"
-  register: abiquo_default_outbound_api_user_password
-
 - name: Dummy properties file so liquibase will run
   copy:
     content: ""
@@ -60,13 +68,35 @@
   notify: restart abiquo-tomcat
   when: pkginstall.changed or kinton_created.changed
 
+- name: Obtain m_user default password
+  shell: "{{ mysql_command }} kinton -Nse \"select COMMENTS from DATABASECHANGELOG where ID = 'default_user_for_m'\""
+  register: abiquo_default_outbound_api_user_password
+
 - name: Import SSL certificate from API endpoint into Java keystore
+  block:
+    - java_cert:
+        cert_url: "{{ ui_server_name }}"
+        keystore_path: /usr/java/default/jre/lib/security/cacerts
+        keystore_pass: changeit
+      notify: restart abiquo-tomcat
+      register: certimported
+      when: ui_cert_source == "selfsigned"
+  rescue:
+    - debug:
+        msg: "Could not fetch certificate from {{ ui_server_name }}... Moving on..."
+
+- debug:
+    msg: "ui_cert_source: {{ ui_cert_source }}"
+
+- name: Import SSL certificate into Java keystore
   java_cert:
-    cert_url: "{{ ui_server_name }}"
+    cert_path: "{{ ui_cert_file }}"
     keystore_path: /usr/java/default/jre/lib/security/cacerts
     keystore_pass: changeit
+    cert_alias: abiquo_ui_cert
   notify: restart abiquo-tomcat
   register: certimported
+  when: ui_cert_source != "selfsigned"
 
 - name: Force tomcat restart for cert import
   meta: flush_handlers
