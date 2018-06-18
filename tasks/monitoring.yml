@@ -5,6 +5,7 @@
     - abiquo-emmett
     - abiquo-delorean
     - abiquo-sosreport-plugins
+    - MariaDB-client
     - jdk
 
 - name: Create watchtower schema.

@@ -41,24 +41,6 @@
     replace: "JASPERPATH={{ lsjasperinstall.stdout }}"
     backup: yes
 
-- name: Required 'reporter' user
-  mysql_user:
-    name: reporter
-    password: R3p0rt3r
-    host: localhost
-    priv: "kinton_reports.*:ALL"
-    login_user: root
-    login_password: ''
-
-- name: Required 'reporter' user
-  mysql_user:
-    name: reporter
-    password: R3p0rt3r
-    host: "%"
-    priv: "kinton_reports.*:ALL"
-    login_user: root
-    login_password: ''
-
 - name: Run Abiquo reporting core installation script
   shell: ./install.sh
   args:
