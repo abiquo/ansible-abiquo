@@ -233,4 +233,6 @@ default_firewall_allowed_tcp_ports:
 default_firewall_additional_rules:
   - "iptables -P INPUT DROP"
 abiquo_fw_allowed_ports: []
+fw_additional_ports: []
 abiquo_fw_additional_rules: []
+fw_additional_rules: []
