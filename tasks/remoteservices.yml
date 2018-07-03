@@ -11,7 +11,7 @@
 
 - name: Import SSL certificate from API endpoint into Java keystore
   java_cert:
-    cert_url: "{{ abiquo_properties['abiquo.server.api.location'].rpartition('//')[1] }}"
+    cert_url: "{{ abiquo_properties['abiquo.server.api.location'] | urlsplit('hostname') }}"
     keystore_path: /usr/java/default/jre/lib/security/cacerts
     keystore_pass: changeit
   notify: restart abiquo-tomcat
