@@ -5,9 +5,9 @@
     - "defaults/{{ abiquo_profile }}.yml"
     - defaults/default.yml
 
-- include_tasks: firewall.yml
-
 - include_tasks: repository.yml
+
+- include_tasks: firewall.yml
 
 - include_tasks: selfsigned.yml
   vars:

@@ -8,7 +8,7 @@ provisioner:
   group_vars_path: test/vars
   require_ansible_repo: true
   ansible_verbose: true
-  ansible_version: latest
+  ansible_package_name: ansible
   requirements_path: requirements.yml
 
 transport:
