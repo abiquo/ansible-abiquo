@@ -31,15 +31,17 @@
   register: lsjasperinstall
 
 - name: Set JasperServer install config file
-  copy:
-    src: default_master.properties
+  template:
+    src: jasper_default_master.properties.j2
     dest: "{{ lsjasperinstall.stdout }}/buildomatic/default_master.properties"
+  register: jasper_config
 
 - name: Run JasperServer installation
   shell: ./js-install-ce.sh minimal
   args:
     chdir: "{{ lsjasperinstall.stdout }}/buildomatic"
     creates: /opt/abiquo/tomcat/webapps/jasperserver
+  when: jasper_config.changed
   register: jasperinstallrun
 
 - name: Fix permissions in webapps folder
