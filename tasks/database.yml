@@ -1,6 +1,8 @@
 ---
 - name: Install requirements
-  yum: name=MySQL-python state=present
+  yum:
+    name: MySQL-python
+    state: present
 
 - name: Create kinton DB user
   mysql_user:

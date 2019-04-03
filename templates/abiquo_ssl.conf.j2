@@ -14,7 +14,7 @@
 
     {{ ui_apache_opts_raw }}
 
-{% for opt, val in ui_apache_opts.iteritems() %}
+{% for opt, val in ui_apache_opts.items() %}
     {{ opt }} {{ val }}
 {% endfor %}
  
@@ -26,12 +26,12 @@
     </Directory>
     RewriteRule ^/$ /ui/ [R]
 
-{% for proxy, val in ui_proxies.iteritems() %}
+{% for proxy, val in ui_proxies.items() %}
     <Location {{ proxy }}>
         ProxyPass {{ val.url }}
         ProxyPassReverse {{ val.url }}
 {% if val.options is defined %}
-{% for opt, val in val.options.iteritems() %}
+{% for opt, val in val.options.items() %}
         {{ opt }} {{ val }}
 {% endfor %}
 {% endif %}

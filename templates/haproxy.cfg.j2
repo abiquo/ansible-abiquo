@@ -9,7 +9,7 @@ frontend public
   mode http
   timeout client 3600s
   log global
-{% for path, value in haproxy_paths.iteritems() %}
+{% for path, value in haproxy_paths.items() %}
 {% if path == 'default' %}
   default_backend ws
 {% else %}
@@ -18,7 +18,7 @@ frontend public
 {% endif %}
 {% endfor %}
 
-{% for path, value in haproxy_paths.iteritems() %}
+{% for path, value in haproxy_paths.items() %}
 {% if path == 'default' %}
 backend ws
   balance source

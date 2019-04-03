@@ -1,12 +1,15 @@
 ---
 - name: Install Apache2 httpd Server
-  yum: name={{ item }} state=present
-  with_items: 
-    - httpd
-    - mod_ssl
+  yum:
+    name:
+      - httpd
+      - mod_ssl
+    state: present
 
 - name: Enable needed apache modules
-  apache2_module: state=present name={{ item }}
+  apache2_module:
+    state: present
+    name: "{{ item }}"
   with_items:
     - proxy
     - proxy_ajp

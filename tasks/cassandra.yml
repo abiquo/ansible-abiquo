@@ -8,18 +8,20 @@
     enabled: yes
 
 - name: Install Cassandra required packages
-  yum: name={{ item }} state=present
-  with_items:
-    - dsc30
-    - jdk
-
-# Update /etc/hosts required to boot Cassandra
-# - name: Update /etc/hosts
-#   lineinfile: dest=/etc/hosts regexp="^{{ ansible_default_ipv4.address }}" line='{{ ansible_default_ipv4.address }} {{ ansible_nodename }} {{ ansible_hostname }}'
+  yum:
+    name:
+      - dsc30
+      - jdk
+    state: present
 
 - name: Applying Cassandra configuration template
-  template: src=cassandra.yaml.j2 dest=/etc/cassandra/default.conf/cassandra.yaml
+  template:
+    src: cassandra.yaml.j2
+    dest: /etc/cassandra/default.conf/cassandra.yaml
   notify: restart cassandra
 
 - name: Start Cassandra service
-  service: name=cassandra state=started enabled=yes
+  service:
+    name: cassandra
+    state: started
+    enabled: yes

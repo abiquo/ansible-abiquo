@@ -1,10 +1,11 @@
 ---
 - name: Install Abiquo packages for an API server
-  yum: name={{ item }} state=present
-  with_items:
-    - abiquo-server
-    - abiquo-sosreport-plugins
-    - MariaDB-client
+  yum:
+    name:
+      - abiquo-server
+      - abiquo-sosreport-plugins
+      - MariaDB-client
+    state: present
   register: pkginstall
 
 - name: Ensure abiquo/config folder exists

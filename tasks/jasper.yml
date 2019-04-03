@@ -1,10 +1,11 @@
 ---
 - name: Install Tomcat and Java
-  yum: name={{ item }} state=present
-  with_items:
-    - unzip
-    - jdk
-    - abiquo-core
+  yum:
+    name:
+      - unzip
+      - jdk
+      - abiquo-core
+    state: present
 
 - name: Ensure JasperServer install files directory exists
   file:

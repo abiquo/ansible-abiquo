@@ -2,9 +2,10 @@
 - import_tasks: mariadb.yml
 
 - name: Dependency packages
-  yum: name={{ item }} state=present
-  with_items:
-    - unzip
+  yum:
+    name:
+      - unzip
+    state: present
 
 - name: Check replication slave status
   mysql_replication: mode=getslave

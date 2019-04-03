@@ -1,9 +1,10 @@
 ---
 - name: Install curl and unzip packages
-  yum: name={{ item }} state=present
-  with_items:
-    - curl
-    - unzip
+  yum:
+    name:
+      - curl
+      - unzip
+    state: present
 
 - name: Create JCE dir
   file:
