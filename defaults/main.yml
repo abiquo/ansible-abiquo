@@ -69,7 +69,7 @@ ui_cert_source: selfsigned
 ui_cert_file: /etc/pki/abiquo/{{ ui_server_name }}.crt
 ui_cert_key_file: /etc/pki/abiquo/{{ ui_server_name }}.key
 ui_cert_csr_file: /etc/pki/abiquo/{{ ui_server_name }}.csr
-# ui_cert_ca_file: ...
+ui_cert_ca_file: /etc/pki/abiquo/{{ ui_server_name }}.ca
 
 # UI app configuration attributes. These attributes will be rendered
 # in /var/www/html/ui/config/client-config-custom.json
