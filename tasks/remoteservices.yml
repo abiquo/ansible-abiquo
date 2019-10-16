@@ -4,6 +4,7 @@
     name:
       - abiquo-remote-services
       - abiquo-sosreport-plugins
+      - abiquo-remote-services
       - jdk
     state: present
 
