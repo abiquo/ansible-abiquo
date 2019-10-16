@@ -5,18 +5,29 @@
 - include_tasks: jasper.yml
 
 - name: Install MariaDB Clients
-  yum: name={{ item }} state=present
-  with_items:
-    - MariaDB-client
-    - MySQL-python
+  yum:
+    name:
+      - MariaDB-client
+      - MySQL-python
+    state: present
 
-- name: Download Abiquo reporting module
+- name: Download Abiquo reporting module (plan A)
   get_url:
     url: "{{ abiquo_reporting_core_url }}"
     dest: "{{ jasperserver_install_files }}/abiquo-reporting-core.zip"
     mode: 0644
     force: no
   register: download
+  when: abiquo_reporting_core_url is defined and abiquo_reporting_core_url != ''
+
+- name: Download Abiquo reporting module (plan B)
+  copy:
+    src:  "{{ abiquo_reporting_core_file }}"
+    dest: "{{ jasperserver_install_files }}/abiquo-reporting-core.zip"
+    mode: 0644
+    force: no
+  register: download
+  when: abiquo_reporting_core_file is defined and abiquo_reporting_core_file != ''
 
 - name: Install unzip to deflate reports zip file
   yum: name=unzip state=present
@@ -31,7 +42,7 @@
     remote_src: True
     src: "{{ jasperserver_install_files }}/abiquo-reporting-core.zip"
     dest: "{{ jasperserver_install_files }}/abiquo-reporting-core"
-  when: download.changed
+  when: download.changed and not ansible_check_mode
   register: zipextracted
 
 - name: Get JasperServer installation dir
@@ -50,6 +61,7 @@
     regexp: '^JASPERPATH=.*$'
     replace: "JASPERPATH={{ lsjasperinstall.stdout }}"
     backup: yes
+  when: not ansible_check_mode
 
 - set_fact:
     reporting_db_pwdflag: "-p {{ abiquo_reporting_db_password }}"

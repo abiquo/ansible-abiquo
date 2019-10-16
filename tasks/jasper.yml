@@ -4,6 +4,7 @@
     name:
       - unzip
       - jdk
+      - java-1.8.0-openjdk-devel
       - abiquo-core
     state: present
 
@@ -19,6 +20,7 @@
     mode: 0644
     force: no
   register: jasperdownload
+  when: not ansible_check_mode
 
 - name: Extract JasperServer files
   unarchive:
@@ -36,6 +38,7 @@
     src: jasper_default_master.properties.j2
     dest: "{{ lsjasperinstall.stdout }}/buildomatic/default_master.properties"
   register: jasper_config
+  when: not ansible_check_mode
 
 - name: Run JasperServer installation
   shell: ./js-install-ce.sh minimal
