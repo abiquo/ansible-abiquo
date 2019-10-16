@@ -5,6 +5,7 @@
       - wget
       - kairosdb
     state: present
+  when: not ansible_check_mode
 
 - name: Applying KairosDB configuration template
   template:

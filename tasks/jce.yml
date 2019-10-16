@@ -15,7 +15,8 @@
   get_url: 
     url: http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip
     dest: /tmp/jce_policy-8.zip
-    headers: "Cookie:oraclelicense=accept-securebackup-cookie;"
+    headers:
+      Cookie: oraclelicense=accept-securebackup-cookie
 
 - name: Extract Oracle Java 1.8 JCE to destination path
   unarchive:
@@ -40,4 +41,4 @@
   with_items:
     - local_policy.jar
     - US_export_policy.jar
-  when: jce_check.stdout == 'false'
+  when: not ansible_check_mode and jce_check.stdout == 'false'
