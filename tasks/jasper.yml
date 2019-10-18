@@ -2,6 +2,7 @@
 - name: Install Tomcat and Java
   yum:
     name:
+      - ant
       - unzip
       - jdk
       - java-1.8.0-openjdk-devel
@@ -33,6 +34,29 @@
   shell: "find {{ jasperserver_install_files }} -maxdepth 1 -type d | egrep -v \"^{{ jasperserver_install_files }}$\" | grep jasperreports-server-cp"
   register: lsjasperinstall
 
+# Set environment variables for the jasper installation
+- name:     Get ant home
+  set_fact:
+    ant_home_path: '/usr/share/ant'
+
+- name:     Get java home
+  shell:    find /usr/lib -maxdepth 1 -type d -name jvm
+  register: java_home_find
+
+- set_fact:
+    jasper_installation_env:
+      ANT_HOME:  "{{ ant_home_path }}"
+      JAVA_HOME: "{{ java_home_find.stdout }}"
+
+- name: Get installed tomcat version
+  yum:
+    list:     tomcat
+  register: yum_list_tomcat_package
+
+# Get installed tomcat major version (first char only: 5, 6, 7, ...)
+- set_fact:
+    tomcat_version: "{{ yum_list_tomcat_package.results[0].version[:1] }}"
+
 - name: Set JasperServer install config file
   template:
     src: jasper_default_master.properties.j2
@@ -40,11 +64,23 @@
   register: jasper_config
   when: not ansible_check_mode
 
+# TODO decide whether to leave this ON during deployment or not
+#- name: Drop JasperServer database (because it might be installed during the testing phase)
+#  shell: ./js-install-ce.sh drop-db
+#  args:
+#    chdir: "{{ lsjasperinstall.stdout }}/buildomatic"
+#  environment: "{{ jasper_installation_env }}"
+#  when: jasper_config.changed
+
+# Input a 'y' character to bypass this prompt:
+# [input] Database [jasperserver] already exists. Drop it and create new? WARNING: All existing data will be lost! This operation may not be rolled back.
+# Enter 'y' to recreate or 'n' to skip this step. Default is 'n' (y, [n])
 - name: Run JasperServer installation
-  shell: ./js-install-ce.sh minimal
+  shell: 'echo y | ./js-install-ce.sh minimal'
   args:
     chdir: "{{ lsjasperinstall.stdout }}/buildomatic"
     creates: /opt/abiquo/tomcat/webapps/jasperserver
+  environment: "{{ jasper_installation_env }}"
   when: jasper_config.changed
   register: jasperinstallrun
 

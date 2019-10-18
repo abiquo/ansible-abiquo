@@ -148,9 +148,9 @@ kariosdb_cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"
 
 # Reporting
 # JasperServer
-jasperserver_version: 7.1.1
+jasperserver_version: 6.2.0
 jasperserver_install_files: /opt/jasper
-jasperserver_zip_url: "https://downloads.sourceforge.net/project/jasperserver/JasperServer/JasperReports%20Server%20Community%20Edition%20{{ jasperserver_version }}/TIB_js-jrs-cp_{{ jasperserver_version }}_bin.zip"
+jasperserver_zip_url: "https://sourceforge.net/projects/jasperserver/files/JasperServer/JasperReports%20Server%20Community%20Edition%20{{ jasperserver_version }}/jasperreports-server-cp-{{ jasperserver_version }}-bin.zip/download"
 jasperserver_tomcat_server_port: 8080
 jasperserver_tomcat_server_shutdown_port: 8005
 jasperserver_tomcat_server_ajp_port: 8009
