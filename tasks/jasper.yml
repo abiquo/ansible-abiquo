@@ -101,3 +101,16 @@
 
 - name: Start JasperServer
   service: name=abiquo-tomcat state=started enabled=yes
+
+- set_fact:
+    reporting_db_pwdflag: "--password={{ abiquo_reporting_db_password }}"
+  when: abiquo_reporting_db_password is defined and abiquo_reporting_db_password != ""
+
+- name: Schedule Jasper temporary tables cleanup
+  cron:
+    cron_file: ansible_abiquo-jasper-temp-tables-cleanup
+    hour:      '1'
+    job:       "mysql --execute='CALL kinton_reporting.TruncateRLSTables ();' --host={{ abiquo_reporting_db_host }} --port={{ abiquo_reporting_db_port }} --user={{ abiquo_reporting_db_username }} {{ reporting_db_pwdflag is defined | ternary(reporting_db_pwdflag,'') }}"
+    minute:    '0'
+    name:      Abiquo Jasper temporary tables cleanup
+    user:      root
