@@ -1,2 +1,4 @@
 ---
 abiquo_reporing_ssl_jasperserver: no
+fw_additional_ports:
+  - "8888"
