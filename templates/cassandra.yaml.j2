@@ -1,1 +1,1 @@
-{{ cassandra_default_config|combine(cassandra_config) | to_nice_yaml }}
+{{ cassandra_default_config|combine(cassandra_config) | to_json | from_json | to_nice_yaml }}
