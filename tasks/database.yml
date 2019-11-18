@@ -16,9 +16,9 @@
     login_host: "{{ abiquo_db_login_host }}"
     login_port: "{{ abiquo_db_login_port }}"
   with_items:
-    - localhost
-    - "{{ abiquo_db_from }}"
-    - "{{ ansible_hostname }}"
+   - localhost
+   - "{{ abiquo_db_from }}"
+   - "{{ ansible_hostname }}"
   when: abiquo_profile == 'server' or abiquo_profile == 'monolithic'
 
 - name: "Grant SUPER privilege to Abiquo DB user"
