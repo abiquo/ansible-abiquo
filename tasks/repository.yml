@@ -21,6 +21,13 @@
     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
     enabled: yes
 
+# Enable Abiquo updates repository if it is available for the current version,
+# so it is necessary to make this task fail ONLY if its status is undefined.
+- uri:
+    url: "{{ abiquo_updates_repo }}/repodata/repomd.xml"
+  register: uri_test
+  failed_when: uri_test.status is undefined or uri_test.status <= 0
+
 - name: Create Updates Repo
   yum_repository:
     name: abiquo-updates
@@ -29,7 +36,8 @@
     baseurl: "{{ abiquo_updates_repo }}"
     gpgcheck: "{{ abiquo_repository_gpg_check }}"
     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
-    enabled: yes
+    enabled: "uri_test.status == 200"
+  when: "uri_test.status == 200"
 
 - name: Install release rpm
   yum: name=abiquo-release-ee state=present disable_gpg_check=yes
