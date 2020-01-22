@@ -1,4 +1,12 @@
 ---
+# Check whether the Abiquo-updates repository is available for the current
+# Abiquo version. Fail with error only if status is unexpected.
+- name: Determine if the mainstream Abiquo updates repo exists for this version
+  uri:
+    url: "{{ abiquo_updates_repo }}/repodata/repomd.xml"
+  register: uri_test
+  failed_when: uri_test.status is undefined or uri_test.status <= 0
+
 - name: Create Base Repo
   yum_repository:
     name: abiquo-base
@@ -9,12 +17,10 @@
     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
     enabled: yes
 
-# Enable Abiquo updates repository if it is available for the current version,
-# so it is necessary to make this task fail ONLY if its status is undefined.
-- uri:
-    url: "{{ abiquo_updates_repo }}/repodata/repomd.xml"
-  register: uri_test
-  failed_when: uri_test.status is undefined or uri_test.status <= 0
+- name: Delete Abiquo updates repository
+  yum_repository:
+    name: abiquo-updates
+    state: absent
 
 - name: Create Updates Repo
   yum_repository:
@@ -24,8 +30,8 @@
     baseurl: "{{ abiquo_updates_repo }}"
     gpgcheck: "{{ abiquo_repository_gpg_check }}"
     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
-    enabled: "uri_test.status == 200"
-  when: "uri_test.status == 200"
+    enabled: yes
+  when: "(uri_test.status == 200)"
 
 - name: Clear cache after repo modification
   command: yum clean all
