@@ -8,3 +8,23 @@
 
 - name: Abiquo UI properties
   template: src=client-config-custom.json.j2 dest=/var/www/html/ui/config/client-config-custom.json
+
+- name: Install Abiquo beta UI (if it exists)
+  yum:
+    name: "{{ abiquo_package_name_ui_beta }}"
+    state: present
+  when: abiquo_install_frontend and abiquo_install_ui_beta
+
+- name: Create beta UI folder (if the beta UI exists)
+  file:
+    path: "{{ abiquo_install_path_config_ui_beta }}"
+    state: directory
+    mode: '0755'
+    recurse: yes
+  when: abiquo_install_frontend and abiquo_install_ui_beta
+
+- name: Abiquo beta UI properties (if the beta UI exists)
+  template:
+    src:  client-config-custom.json.j2
+    dest: "{{ abiquo_install_path_config_ui_beta }}/client-config-custom.json"
+  when: abiquo_install_frontend and abiquo_install_ui_beta

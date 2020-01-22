@@ -11,3 +11,8 @@ abiquo_default_properties:
 abiquo_fw_allowed_ports:
   - "8009"
   - "8010"
+abiquo_install_ui_beta: true
+abiquo_package_name_ui_beta: 'abiquo-ui5'
+abiquo_install_path_ui_beta: '/var/www/html/ui5/'
+abiquo_install_path_theme_ui_beta:  "{{ abiquo_install_path_ui_beta }}theme"
+abiquo_install_path_config_ui_beta: "{{ abiquo_install_path_ui_beta }}config"

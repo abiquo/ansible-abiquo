@@ -1,3 +1,4 @@
+abiquo_install_ui_beta: true
 abiquo_fw_allowed_ports:
   - "80"
   - "443"

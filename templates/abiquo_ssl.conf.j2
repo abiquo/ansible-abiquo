@@ -26,6 +26,16 @@
     </Directory>
     RewriteRule ^/$ /ui/ [R]
 
+{% if abiquo_install_frontend and abiquo_install_ui_beta %}
+    <Directory "/var/www/html/ui5">
+        Options MultiViews FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+    RewriteRule ^/$ /ui5/ [R]
+{% endif %}
+
 {% for proxy, val in ui_proxies.items() %}
     <Location {{ proxy }}>
         ProxyPass {{ val.url }}
