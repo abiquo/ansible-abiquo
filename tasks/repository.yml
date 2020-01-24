@@ -37,7 +37,7 @@
     gpgcheck: "{{ abiquo_repository_gpg_check }}"
     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
     enabled: yes
-  when: "(uri_test.status == 200)"
+  when: "not ansible_check_mode and (uri_test.status == 200)"
 
 - name: Install release rpm
   yum: name=abiquo-release-ee state=present disable_gpg_check=yes
@@ -48,6 +48,7 @@
     - Create Updates Repo
     - Clear cache after repo modification
   ignore_errors: "{{ ansible_check_mode }}"
+  when: "not ansible_check_mode"
 
 - name: Create Updates Repo (from role ansible-abiquo, task repository, ID 2)
   yum_repository:
@@ -58,7 +59,7 @@
     gpgcheck: "{{ abiquo_repository_gpg_check }}"
     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
     enabled: yes
-  when: "(uri_test.status == 200)"
+  when: "not ansible_check_mode and (uri_test.status == 200)"
 
 - name: Run handlers update
   meta: flush_handlers

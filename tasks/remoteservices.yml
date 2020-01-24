@@ -7,6 +7,7 @@
       - abiquo-remote-services
       - jdk
     state: present
+  when: not ansible_check_mode
 
 - name: Ensure abiquo/config folder exists
   file:
@@ -20,7 +21,7 @@
     keystore_pass: changeit
   notify: restart abiquo-tomcat
   register: certimported
-  when: abiquo_properties['abiquo.server.api.location'] is defined
+  when: not ansible_check_mode and abiquo_properties['abiquo.server.api.location'] is defined
 
 - name: RPCbind should be running
   service:

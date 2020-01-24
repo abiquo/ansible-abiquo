@@ -24,12 +24,14 @@
     src: /tmp/jce_policy-8.zip
     dest: /opt/jce
     creates: /opt/jce/UnlimitedJCEPolicyJDK8
+  when: not ansible_check_mode
 
 - name: Check if JCE is already installed
   shell: /usr/java/default/bin/jrunscript -e 'print (javax.crypto.Cipher.getMaxAllowedKeyLength("RC5") >= 256);'
   changed_when: false
   ignore_errors: true
   register: jce_check
+  when: not ansible_check_mode
 
 - name: install JCE policies
   copy:

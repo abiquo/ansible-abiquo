@@ -6,6 +6,7 @@
     owner: tomcat
     group: tomcat
   notify: restart abiquo-tomcat
+  when: not ansible_check_mode
 
 - name: Start Abiquo Tomcat
   service: name=abiquo-tomcat state=started enabled=yes

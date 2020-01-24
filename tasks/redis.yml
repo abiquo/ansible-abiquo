@@ -3,6 +3,7 @@
   yum: name={{ item }} state=present
   with_items:
     - redis
+  when: not ansible_check_mode
 
 - name: Start and enable Redis service
   service: name=redis state=started enabled=yes
