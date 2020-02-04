@@ -1,5 +1,6 @@
 ---
 - include_tasks: apache.yml
+  when: execute_task_apache is defined and execute_task_apache
 
 - name: Install Abiquo packages for an Abiquo frontend
   yum:
