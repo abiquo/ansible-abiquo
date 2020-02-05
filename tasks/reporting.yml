@@ -1,6 +1,6 @@
 ---
 - include_tasks: mariadb_slave.yml
-  when: abiquo_reporing_install_slave
+  when: abiquo_reporting_install_slave
 
 - include_tasks: jasper.yml
 

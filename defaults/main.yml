@@ -157,7 +157,7 @@ jasperserver_tomcat_server_ajp_port: 8009
 jasperserver_tomcat_server_proxy_port: 8888
 
 # Reporting Abiquo
-abiquo_reporing_install_slave: yes
+abiquo_reporting_install_slave: yes
 abiquo_reporting_core_url: ''
 abiquo_reporting_core_file: 'abiquo-reporting-core.zip'
 abiquo_reporting_db_host: localhost
