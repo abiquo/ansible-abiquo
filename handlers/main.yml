@@ -1,4 +1,15 @@
 ---
+- name: Determine if the mainstream Abiquo base repo is available
+  uri:
+    url: "{{ abiquo_base_repo }}/repodata/repomd.xml"
+  register: uri_test_base
+  failed_when: uri_test_base.status is undefined or uri_test_base.status <= 0
+
+- name: Delete Abiquo base repository
+  yum_repository:
+    name: abiquo-base
+    state: absent
+
 # Check whether the Abiquo-updates repository is available for the current
 # Abiquo version. Fail with error only if status is unexpected.
 - name: Determine if the mainstream Abiquo updates repo exists for this version
@@ -16,6 +27,7 @@
     gpgcheck: "{{ abiquo_repository_gpg_check }}"
     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
     enabled: yes
+  when: "not ansible_check_mode and (uri_test_base.status == 200)"
 
 - name: Delete Abiquo updates repository
   yum_repository:
