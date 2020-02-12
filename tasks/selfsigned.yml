@@ -19,6 +19,7 @@
     force: yes
     path: "{{ key_file }}"
   ignore_errors: "{{ ansible_check_mode }}"
+  when: not ansible_check_mode
 
 - name: Generate an OpenSSL CSR
   openssl_csr:
@@ -30,6 +31,7 @@
     organization_name: Abiquo
     organizational_unit_name: Engineering
   ignore_errors: "{{ ansible_check_mode }}"
+  when: not ansible_check_mode
 
 - name: Remove local certificate .crt file if it exists, to force regenerate it
   file:

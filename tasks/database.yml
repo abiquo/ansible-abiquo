@@ -19,7 +19,7 @@
    - localhost
    - "{{ abiquo_db_from }}"
    - "{{ ansible_hostname }}"
-  when: abiquo_profile == 'server' or abiquo_profile == 'monolithic'
+  when: not ansible_check_mode and abiquo_profile == 'server' or abiquo_profile == 'monolithic'
 
 - name: "Grant SUPER privilege to Abiquo DB user"
   mysql_user:
@@ -35,7 +35,7 @@
   with_items:
     - localhost
     - "{{ abiquo_db_from }}"
-  when: abiquo_profile == 'server' or abiquo_profile == 'monolithic'
+  when: not ansible_check_mode and abiquo_profile == 'server' or abiquo_profile == 'monolithic'
 
 - name: Create watchtower DB user
   mysql_user:
