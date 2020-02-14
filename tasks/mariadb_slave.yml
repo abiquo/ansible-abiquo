@@ -21,7 +21,7 @@
 - name: Define master in slave
   mysql_replication: 
     mode: changemaster
-    master_host: "{{ mariadb_master_host }}"
+    master_host: "{{ cluster_master_address }}"
     master_user: replicator
     master_password: +r3pl1c4t0r!!
   when: (not slave.Is_Slave) or stoppedslave.changed
