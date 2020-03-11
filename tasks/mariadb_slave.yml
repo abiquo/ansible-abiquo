@@ -15,22 +15,37 @@
 - name: Stop slave
   mysql_replication: 
     mode: stopslave
-  when: slave.Is_Slave and slave.Last_Errno != 0
+  when: slave.Is_Slave is defined and slave.Is_Slave and slave.Last_Errno != 0
   register: stoppedslave
+
+- name: Create Reporting user in slave
+  mysql_user:
+    name: "{{ abiquo_reporting_db_username }}"
+    password: "{{ abiquo_reporting_db_password }}"
+    host: "%"
+    priv: "*.*:ALL"
+    append_privs: yes
+    login_user: "{{ abiquo_db_login_user }}"
+    login_password: "{{ abiquo_db_login_pass }}"
+    login_host: "{{ abiquo_db_login_host }}"
+    login_port: "{{ abiquo_db_login_port }}"
+    state: present
+  when: not ansible_check_mode
 
 - name: Define master in slave
   mysql_replication: 
     mode: changemaster
-    master_host: "{{ cluster_master_address }}"
+    master_host: "{{ abiquo_reporting_db_host }}"
+    master_port: "{{ abiquo_reporting_db_port }}"
     master_user: replicator
     master_password: +r3pl1c4t0r!!
-  when: (not slave.Is_Slave) or stoppedslave.changed
+  when: (slave.Is_Slave is defined and not slave.Is_Slave) or stoppedslave.changed
 
 - name: Set slave GTID
   command: mysql -e "CHANGE MASTER TO master_use_gtid=current_pos";
-  when: (not slave.Is_Slave) or stoppedslave.changed
+  when: (slave.Is_Slave is defined and not slave.Is_Slave) or stoppedslave.changed
 
 - name: Start slave
   mysql_replication: 
     mode: startslave
-  when: (not slave.Is_Slave) or stoppedslave.changed
+  when: (slave.Is_Slave is defined and not slave.Is_Slave) or stoppedslave.changed
