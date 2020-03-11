@@ -143,8 +143,8 @@ cassandra_config: {}
 
 # KairosDB
 kairosdb_config_file_path: /opt/kairosdb/conf/kairosdb.properties
-kariosdb_cassandra_rpc_port: 9160
-kariosdb_cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"
+kairosdb_cassandra_rpc_port: 9160
+kairosdb_cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"
 
 # Reporting
 # JasperServer
