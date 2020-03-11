@@ -6,6 +6,7 @@
       - MariaDB-client
       - MySQL-python
     state: present
+  when: not ansible_check_mode
 
 - name: Enable MariaDB service
   service: name=mysql enabled=yes

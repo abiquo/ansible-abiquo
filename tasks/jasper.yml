@@ -8,6 +8,7 @@
       - java-1.8.0-openjdk-devel
       - abiquo-core
     state: present
+  when: not ansible_check_mode
 
 - name: Ensure JasperServer install files directory exists
   file:
@@ -47,15 +48,18 @@
     jasper_installation_env:
       ANT_HOME:  "{{ ant_home_path }}"
       JAVA_HOME: "{{ java_home_find.stdout }}"
+  when: not ansible_check_mode
 
 - name: Get installed tomcat version
   yum:
     list:     tomcat
   register: yum_list_tomcat_package
+  when: not ansible_check_mode
 
 # Get installed tomcat major version (first char only: 5, 6, 7, ...)
 - set_fact:
     tomcat_version: "{{ yum_list_tomcat_package.results[0].version[:1] }}"
+  when: not ansible_check_mode
 
 - name: Set JasperServer install config file
   template:
@@ -81,7 +85,9 @@
     chdir: "{{ lsjasperinstall.stdout }}/buildomatic"
     creates: /opt/abiquo/tomcat/webapps/jasperserver
   environment: "{{ jasper_installation_env }}"
-  when: jasper_config.changed
+  when:
+    - not ansible_check_mode
+    - jasper_config.changed or jasperserver_force_reinstall
   register: jasperinstallrun
 
 - name: Fix permissions in webapps folder
@@ -114,3 +120,4 @@
     minute:    '0'
     name:      Abiquo Jasper temporary tables cleanup
     user:      root
+  when: not ansible_check_mode

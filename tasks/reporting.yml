@@ -1,6 +1,6 @@
 ---
 - include_tasks: mariadb_slave.yml
-  when: abiquo_reporing_install_slave
+  when: abiquo_reporting_install_slave
 
 - include_tasks: jasper.yml
 
@@ -10,6 +10,7 @@
       - MariaDB-client
       - MySQL-python
     state: present
+  when: not ansible_check_mode
 
 - name: Download Abiquo reporting module (plan A)
   get_url:
@@ -69,9 +70,12 @@
 
 - set_fact:
     install_reports_command: "./install.sh -h {{ abiquo_reporting_db_host }} -P {{ abiquo_reporting_db_port }} -u {{ abiquo_reporting_db_username }} {{ reporting_db_pwdflag is defined | ternary(reporting_db_pwdflag,'') }} "
+  when: not ansible_check_mode
 
 - name: Run Abiquo reporting core installation script
   shell: "{{ install_reports_command }}"
   args:
     chdir: "{{ jasperserver_install_files }}/abiquo-reporting-core"
-  when: zipextracted.changed
+  when:
+    - not ansible_check_mode
+    - zipextracted.changed or jasperserver_force_reinstall
