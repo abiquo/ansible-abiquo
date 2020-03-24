@@ -35,6 +35,7 @@
 - name: Apache Abiquo SSL config
   template: backup=yes dest=/etc/httpd/conf.d/abiquo.conf src=abiquo_ssl.conf.j2
   notify: restart httpd
+  when: not ansible_check_mode
 
 - name: Set Apache2 httpd Service enabled at start up
   service: name=httpd enabled=yes state=started
