@@ -23,6 +23,7 @@
     new_only: yes
   with_items: "{{ rabbitmq_plugins }}"
   notify: restart rabbitmq
+  when: not ansible_check_mode
 
 - rabbitmq_user:
     user: "{{ abiquo_rabbitmq_username }}"
@@ -33,3 +34,4 @@
     read_priv: .*
     write_priv: .*
     state: present
+  when: not ansible_check_mode
