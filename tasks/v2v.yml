@@ -6,6 +6,7 @@
       - abiquo-v2v
       - abiquo-sosreport-plugins
     state: present
+  when: not ansible_check_mode 
 
 - name: Ensure abiquo/config folder exists
   file: path=/opt/abiquo/config state=directory

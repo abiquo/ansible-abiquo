@@ -56,6 +56,7 @@
   with_items:
     - localhost
     - "{{ abiquo_monitoring_db_from }}"
+    - "{{ ansible_hostname }}"
   when: not ansible_check_mode and abiquo_profile == 'monitoring'
 
 - name: "Grant SUPER privilege to Abiquo monitoring DB user"
@@ -72,4 +73,5 @@
   with_items:
     - localhost
     - "{{ abiquo_monitoring_db_from }}"
+    - "{{ ansible_hostname }}"
   when: not ansible_check_mode and abiquo_profile == 'monitoring'
