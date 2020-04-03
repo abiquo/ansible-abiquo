@@ -83,7 +83,7 @@
         keystore_pass: changeit
       notify: restart abiquo-tomcat
       register: certimported
-      when: ui_cert_source == "selfsigned"
+      when: ui_cert_source == "selfsigned" and not ansible_check_mode
   rescue:
     - debug:
         msg: "Could not fetch certificate from {{ ui_server_name }}... Moving on..."
@@ -99,7 +99,7 @@
     cert_alias: abiquo_ui_cert
   notify: restart abiquo-tomcat
   register: certimported
-  when: ui_cert_source != "selfsigned"
+  when: ui_cert_source != "selfsigned" and not ansible_check_mode
 
 - name: Force tomcat restart for cert import
   meta: flush_handlers
