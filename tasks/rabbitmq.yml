@@ -3,9 +3,11 @@
   yum:
     name: rabbitmq-server
     state: present
+  when: not ansible_check_mode
 
 - name: Start and enable RabbitMQ service
   service: name=rabbitmq-server state=started enabled=yes
+  when: not ansible_check_mode
 
 - name: RabbitMQ config files
   template:
