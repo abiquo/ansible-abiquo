@@ -187,10 +187,10 @@ default_mariadb_config:
     tmpdir: /var/tmp
     lc_messages_dir: /usr/share/mysql
     lc_messages: en_US
-    max_connections: 100
+    max_connections: 500
     connect_timeout: 5
     wait_timeout: 600
-    max_allowed_packet: 16M
+    max_allowed_packet: 256M
     thread_cache_size: 128
     sort_buffer_size: 4M
     bulk_insert_buffer_size: 16M
@@ -223,6 +223,7 @@ default_mariadb_config:
     server-id: 1
     binlog_format: ROW
     skip-external-locking:
+    log_error = /var/log/mysql/mysql.err
 
   mysqldump:
     max_allowed_packet: 16M
