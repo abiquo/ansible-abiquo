@@ -223,7 +223,7 @@ default_mariadb_config:
     server-id: 1
     binlog_format: ROW
     skip-external-locking:
-    log_error = /var/log/mysql/mysql.err
+      log_error = /var/log/mysql/mysql.err
 
   mysqldump:
     max_allowed_packet: 16M
