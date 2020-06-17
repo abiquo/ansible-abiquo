@@ -51,8 +51,8 @@
     append_privs: yes
     login_user: "{{ abiquo_db_login_user }}"
     login_password: "{{ abiquo_db_login_pass }}"
-    login_host: "{{ abiquo_db_login_host }}"
-    login_port: "{{ abiquo_db_login_port }}"
+    login_host: "{{ abiquo_monitoring_db_host }}"
+    login_port: "{{ abiquo_monitoring_db_port }}"
   with_items:
     - localhost
     - "{{ abiquo_monitoring_db_from }}"
@@ -68,8 +68,8 @@
     append_privs: yes
     login_user: "{{ abiquo_db_login_user }}"
     login_password: "{{ abiquo_db_login_pass }}"
-    login_host: "{{ abiquo_db_login_host }}"
-    login_port: "{{ abiquo_db_login_port }}"
+    login_host: "{{ abiquo_monitoring_db_host }}"
+    login_port: "{{ abiquo_monitoring_db_port }}"
   with_items:
     - localhost
     - "{{ abiquo_monitoring_db_from }}"
