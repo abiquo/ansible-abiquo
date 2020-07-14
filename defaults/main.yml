@@ -59,7 +59,7 @@ ui_proxies: {}
 # does not manage the certificate files path provided
 # for non generated certificates.
 #
-# Set this to any other value will skip selfsigned 
+# Set this to any other value will skip selfsigned
 # cert generation
 ui_cert_source: selfsigned
 

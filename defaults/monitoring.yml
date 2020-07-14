@@ -45,7 +45,7 @@ cassandra_default_config:
   batch_size_warn_threshold_in_kb: 5
   batchlog_replay_throttle_in_kb: 1024
   cas_contention_timeout_in_ms: 1000
-  client_encryption_options: 
+  client_encryption_options:
     enabled: false
     keystore: conf/.keystore
     keystore_password: cassandra
@@ -100,10 +100,10 @@ cassandra_default_config:
   rpc_server_type: sync
   saved_caches_directory: /var/lib/cassandra/saved_caches
   seed_provider:
-  - class_name: org.apache.cassandra.locator.SimpleSeedProvider
-    parameters:
-    - seeds: 127.0.0.1
-  server_encryption_options: 
+    - class_name: org.apache.cassandra.locator.SimpleSeedProvider
+      parameters:
+        - seeds: 127.0.0.1
+  server_encryption_options:
     internode_encryption: none
     keystore: conf/.keystore
     keystore_password: cassandra
