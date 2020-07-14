@@ -91,7 +91,7 @@
   register: jasperinstallrun
 
 - name: Fix permissions in webapps folder
-  file: 
+  file:
     path: /opt/abiquo/tomcat
     owner: tomcat
     group: tomcat
@@ -99,7 +99,7 @@
   when: jasperinstallrun.changed
 
 - name: Configure JasperServer tomcat
-  template: 
+  template:
     src: server.xml.j2
     dest: "/opt/abiquo/tomcat/conf/server.xml"
     mode: 0644

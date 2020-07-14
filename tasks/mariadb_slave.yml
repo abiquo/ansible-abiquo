@@ -13,7 +13,7 @@
   register: slave
 
 - name: Stop slave
-  mysql_replication: 
+  mysql_replication:
     mode: stopslave
   when: slave.Is_Slave is defined and slave.Is_Slave and slave.Last_Errno != 0
   register: stoppedslave
@@ -33,7 +33,7 @@
   when: not ansible_check_mode
 
 - name: Define master in slave
-  mysql_replication: 
+  mysql_replication:
     mode: changemaster
     master_host: "{{ abiquo_reporting_db_host }}"
     master_port: "{{ abiquo_reporting_db_port }}"
@@ -46,6 +46,6 @@
   when: (slave.Is_Slave is defined and not slave.Is_Slave) or stoppedslave.changed
 
 - name: Start slave
-  mysql_replication: 
+  mysql_replication:
     mode: startslave
   when: (slave.Is_Slave is defined and not slave.Is_Slave) or stoppedslave.changed

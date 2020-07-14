@@ -67,7 +67,7 @@
 
 - name: liquibase watchtower
   command: watchtower-db -h {{ abiquo_db_host }} -u {{ abiquo_db_user }} -p {{ abiquo_db_pass }} -P {{ abiquo_db_port }} update
-  notify: 
+  notify:
     - restart emmett
     - restart delorean
 

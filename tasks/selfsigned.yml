@@ -44,13 +44,13 @@
 - name: Generate self-signed SSL certificate
   shell: "openssl req -nodes -x509 -sha256 -days 3650 -in {{ csr_file }} -key {{ key_file }} -out {{ cert_file }} -extensions v3_ca"
   args:
-     creates: "{{ cert_file }}"
+    creates: "{{ cert_file }}"
   ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Convert key to pkcs8 format
   shell: "openssl pkcs8 -v1 PBE-SHA1-3DES -topk8 -in {{ key_file }} -out {{ key_file }}.pkcs8 -passout pass:"
   args:
-     creates: "{{ key_file }}.pkcs8"
+    creates: "{{ key_file }}.pkcs8"
   ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Create cert dir
