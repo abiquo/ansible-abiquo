@@ -21,7 +21,11 @@
     dest: "{{ jasperserver_install_files }}/jasper.zip"
     mode: 0644
     force: no
+    timeout: 30
   register: jasperdownload
+  retries: 5
+  delay: 5
+  until: jasperdownload is success
   when: not ansible_check_mode
 
 - name: Extract JasperServer files
