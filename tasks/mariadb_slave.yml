@@ -7,45 +7,116 @@
       - unzip
     state: present
 
-- name: Check replication slave status
-  mysql_replication: mode=getslave
-  ignore_errors: true
-  register: slave
+- name: MariaDB configuration file replication.cnf
+  template:
+    src: replication_slave.cnf.j2
+    dest: /etc/my.cnf.d/replication.cnf
+  register: slavereplication
 
-- name: Stop slave
+- name: "Restart MariaDB service"
+  service:
+    name: mariadb
+    state: restarted
+  when: slavereplication.changed
+
+- name: Create replication user in master
+  mysql_user:
+    name: "{{ abiquo_reporting_db_username }}"
+    password: "{{ abiquo_reporting_db_password }}"
+    host: "{{ item }}"
+    priv: "*.*:ALL"
+    append_privs: yes
+    login_user: "{{ abiquo_master_db_login_user }}"
+    login_password: "{{ abiquo_master_db_login_pass }}"
+    login_host: "{{ abiquo_master_db_login_host }}"
+    login_port: "{{ abiquo_master_db_login_port }}"
+    state: present
+  with_items:
+    - localhost
+    - "{{ abiquo_master_db_login_host }}"
+    - "{{ abiquo_reporting_db_host }}"
+  when: not ansible_check_mode
+
+- name: Lock kinton in master
+  shell:
+    cmd: "mysql -u{{ abiquo_master_db_login_user }} -p{{ abiquo_master_db_login_pass }} -h{{ abiquo_master_db_login_host }} -P{{ abiquo_master_db_login_port }} -N kinton -e 'FLUSH TABLES WITH READ LOCK'"
+
+- name: Lock kinton_accounting in master
+  shell:
+    cmd: "mysql -u{{ abiquo_master_db_login_user }} -p{{ abiquo_master_db_login_pass }} -h{{ abiquo_master_db_login_host }} -P{{ abiquo_master_db_login_port }} -N kinton_accounting -e 'FLUSH TABLES WITH READ LOCK'"
+
+- name: Dump databases
+  mysql_db:
+    state: dump
+    name:
+      - kinton
+      - kinton_accounting
+    target: /tmp/dump.sql
+    login_user: "{{ abiquo_master_db_login_user }}"
+    login_password: "{{ abiquo_master_db_login_pass }}"
+    login_host: "{{ abiquo_master_db_login_host }}"
+    login_port: "{{ abiquo_master_db_login_port }}"
+
+- name: Get master binlog file name and binlog position
   mysql_replication:
-    mode: stopslave
-  when: slave.Is_Slave is defined and slave.Is_Slave and slave.Last_Errno != 0
-  register: stoppedslave
+    mode: getmaster
+    login_user: "{{ abiquo_master_db_login_user }}"
+    login_password: "{{ abiquo_master_db_login_pass }}"
+    login_host: "{{ abiquo_master_db_login_host }}"
+    login_port: "{{ abiquo_master_db_login_port }}"
+  register: master_replication_status
+
+- name: Unlock kinton in master
+  shell:
+    cmd: "mysql -u{{ abiquo_master_db_login_user }} -p{{ abiquo_master_db_login_pass }} -h{{ abiquo_master_db_login_host }} -P{{ abiquo_master_db_login_port }} -N kinton -e 'UNLOCK TABLES'"
+
+- name: Unlock kinton_accounting in master
+  shell:
+    cmd: "mysql -u{{ abiquo_master_db_login_user }} -p{{ abiquo_master_db_login_pass }} -h{{ abiquo_master_db_login_host }} -P{{ abiquo_master_db_login_port }} -N kinton_accounting -e 'UNLOCK TABLES'"
 
 - name: Create Reporting user in slave
   mysql_user:
     name: "{{ abiquo_reporting_db_username }}"
     password: "{{ abiquo_reporting_db_password }}"
-    host: "%"
+    host: "{{ item }}"
     priv: "*.*:ALL"
     append_privs: yes
-    login_user: "{{ abiquo_db_login_user }}"
-    login_password: "{{ abiquo_db_login_pass }}"
-    login_host: "{{ abiquo_db_login_host }}"
-    login_port: "{{ abiquo_db_login_port }}"
     state: present
+  with_items:
+    - localhost
+    - "{{ abiquo_reporting_db_host }}"
   when: not ansible_check_mode
 
-- name: Define master in slave
+- name: Import master dump
+  mysql_db:
+    state: import
+    name: all
+    target: /tmp/dump.sql
+  ignore_errors: yes
+
+- name: Set up master-slave replication
   mysql_replication:
     mode: changemaster
-    master_host: "{{ abiquo_reporting_db_host }}"
-    master_port: "{{ abiquo_reporting_db_port }}"
-    master_user: replicator
-    master_password: +r3pl1c4t0r!!
-  when: (slave.Is_Slave is defined and not slave.Is_Slave) or stoppedslave.changed
-
-- name: Set slave GTID
-  command: mysql -e "CHANGE MASTER TO master_use_gtid=current_pos";
-  when: (slave.Is_Slave is defined and not slave.Is_Slave) or stoppedslave.changed
+    master_host: "{{ abiquo_master_db_login_host }}"
+    master_port: "{{ abiquo_master_db_login_port }}"
+    master_user: "{{ abiquo_reporting_db_username }}"
+    master_password: "{{ abiquo_reporting_db_password }}"
+    master_log_file: "{{ master_replication_status.File }}"
+    master_log_pos: "{{ master_replication_status.Position }}"
 
 - name: Start slave
-  mysql_replication:
+  mysql_replication: 
     mode: startslave
-  when: (slave.Is_Slave is defined and not slave.Is_Slave) or stoppedslave.changed
+
+- name: Check replication master status
+  mysql_replication:
+    mode: getmaster
+    login_user: "{{ abiquo_master_db_login_user }}"
+    login_password: "{{ abiquo_master_db_login_pass }}"
+    login_host: "{{ abiquo_master_db_login_host }}"
+    login_port: "{{ abiquo_master_db_login_port }}"
+
+- name: Check replication slave status
+  mysql_replication: 
+    mode: getslave
+
