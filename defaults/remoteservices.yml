@@ -10,7 +10,7 @@ abiquo_default_properties:
   abiquo.rabbitmq.password: "{{ abiquo_rabbitmq_password }}"
   abiquo.rabbitmq.username: "{{ abiquo_rabbitmq_username }}"
   abiquo.rabbitmq.virtualHost: "{{ abiquo_rabbitmq_vhost }}"
-  abiquo.appliancemanager.localRepositoryPath: "{{ nfs_path }}"
+  abiquo.appliancemanager.localRepositoryPath: "{{ nfs_local_path }}"
   abiquo.appliancemanager.repositoryLocation: "{{ nfs_server_ip }}:{{ nfs_path }}"
   abiquo.virtualfactory.hyperv.repositoryLocation: "//{{ nfs_server_ip }}/vm_repository"
   abiquo.virtualfactory.xenserver.repositoryLocation: "{{ nfs_server_ip }}:{{ nfs_path }}"

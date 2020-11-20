@@ -16,7 +16,7 @@ abiquo_default_properties:
   abiquo.m.credential: "{{ abiquo_default_outbound_api_user_password.stdout }}"
   abiquo.m.instanceid: "{{ ansible_hostname }}"
   abiquo.datacenter.id: "{{ ansible_hostname }}"
-  abiquo.appliancemanager.localRepositoryPath: "{{ nfs_path }}"
+  abiquo.appliancemanager.localRepositoryPath: "{{ nfs_local_path }}"
   abiquo.appliancemanager.repositoryLocation: "{{ nfs_server_ip }}:{{ nfs_path }}"
   abiquo.virtualfactory.hyperv.repositoryLocation: "//{{ nfs_server_ip }}/vm_repository"
   abiquo.virtualfactory.xenserver.repositoryLocation: "{{ nfs_server_ip }}:{{ nfs_path }}"
