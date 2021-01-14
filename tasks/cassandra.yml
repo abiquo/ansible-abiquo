@@ -13,6 +13,7 @@
       - dsc30
       - jdk
     state: present
+  when: not ansible_check_mode
 
 - name: Applying Cassandra configuration template
   template:

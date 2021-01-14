@@ -2,10 +2,13 @@
 - name: Install Tomcat and Java
   yum:
     name:
+      - ant
       - unzip
       - jdk
+      - java-1.8.0-openjdk-devel
       - abiquo-core
     state: present
+  when: not ansible_check_mode
 
 - name: Ensure JasperServer install files directory exists
   file:
@@ -18,7 +21,12 @@
     dest: "{{ jasperserver_install_files }}/jasper.zip"
     mode: 0644
     force: no
+    timeout: 30
   register: jasperdownload
+  retries: 5
+  delay: 5
+  until: jasperdownload is success
+  when: not ansible_check_mode
 
 - name: Extract JasperServer files
   unarchive:
@@ -31,22 +39,63 @@
   shell: "find {{ jasperserver_install_files }} -maxdepth 1 -type d | egrep -v \"^{{ jasperserver_install_files }}$\" | grep jasperreports-server-cp"
   register: lsjasperinstall
 
+# Set environment variables for the jasper installation
+- name:     Get ant home
+  set_fact:
+    ant_home_path: '/usr/share/ant'
+
+- name:     Get java home
+  shell:    find /usr/lib -maxdepth 1 -type d -name jvm
+  register: java_home_find
+
+- set_fact:
+    jasper_installation_env:
+      ANT_HOME:  "{{ ant_home_path }}"
+      JAVA_HOME: "{{ java_home_find.stdout }}"
+  when: not ansible_check_mode
+
+- name: Get installed tomcat version
+  yum:
+    list:     tomcat
+  register: yum_list_tomcat_package
+  when: not ansible_check_mode
+
+# Get installed tomcat major version (first char only: 5, 6, 7, ...)
+- set_fact:
+    tomcat_version: "{{ yum_list_tomcat_package.results[0].version[:1] }}"
+  when: not ansible_check_mode
+
 - name: Set JasperServer install config file
   template:
     src: jasper_default_master.properties.j2
     dest: "{{ lsjasperinstall.stdout }}/buildomatic/default_master.properties"
   register: jasper_config
+  when: not ansible_check_mode
 
+# TODO decide whether to leave this ON during deployment or not
+#- name: Drop JasperServer database (because it might be installed during the testing phase)
+#  shell: ./js-install-ce.sh drop-db
+#  args:
+#    chdir: "{{ lsjasperinstall.stdout }}/buildomatic"
+#  environment: "{{ jasper_installation_env }}"
+#  when: jasper_config.changed
+
+# Input a 'y' character to bypass this prompt:
+# [input] Database [jasperserver] already exists. Drop it and create new? WARNING: All existing data will be lost! This operation may not be rolled back.
+# Enter 'y' to recreate or 'n' to skip this step. Default is 'n' (y, [n])
 - name: Run JasperServer installation
-  shell: ./js-install-ce.sh minimal
+  shell: 'echo y | ./js-install-ce.sh minimal'
   args:
     chdir: "{{ lsjasperinstall.stdout }}/buildomatic"
     creates: /opt/abiquo/tomcat/webapps/jasperserver
-  when: jasper_config.changed
+  environment: "{{ jasper_installation_env }}"
+  when:
+    - not ansible_check_mode
+    - jasper_config.changed or jasperserver_force_reinstall
   register: jasperinstallrun
 
 - name: Fix permissions in webapps folder
-  file: 
+  file:
     path: /opt/abiquo/tomcat
     owner: tomcat
     group: tomcat
@@ -54,7 +103,7 @@
   when: jasperinstallrun.changed
 
 - name: Configure JasperServer tomcat
-  template: 
+  template:
     src: server.xml.j2
     dest: "/opt/abiquo/tomcat/conf/server.xml"
     mode: 0644
@@ -62,3 +111,17 @@
 
 - name: Start JasperServer
   service: name=abiquo-tomcat state=started enabled=yes
+
+- set_fact:
+    reporting_db_pwdflag: "--password={{ abiquo_reporting_db_password }}"
+  when: abiquo_reporting_db_password is defined and abiquo_reporting_db_password != ""
+
+- name: Schedule Jasper temporary tables cleanup
+  cron:
+    cron_file: ansible_abiquo-jasper-temp-tables-cleanup
+    hour:      '1'
+    job:       "mysql --execute='CALL kinton_reporting.TruncateRLSTables ();' --host={{ abiquo_reporting_db_host }} --port={{ abiquo_reporting_db_port }} --user={{ abiquo_reporting_db_username }} {{ reporting_db_pwdflag is defined | ternary(reporting_db_pwdflag,'') }}"
+    minute:    '0'
+    name:      Abiquo Jasper temporary tables cleanup
+    user:      root
+  when: not ansible_check_mode

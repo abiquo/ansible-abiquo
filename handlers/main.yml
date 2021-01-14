@@ -1,4 +1,23 @@
 ---
+- name: Determine if the mainstream Abiquo base repo is available
+  uri:
+    url: "{{ abiquo_base_repo }}/repodata/repomd.xml"
+  register: uri_test_base
+  failed_when: uri_test_base.status is undefined or uri_test_base.status <= 0
+
+- name: Delete Abiquo base repository
+  yum_repository:
+    name: abiquo-base
+    state: absent
+
+# Check whether the Abiquo-updates repository is available for the current
+# Abiquo version. Fail with error only if status is unexpected.
+- name: Determine if the mainstream Abiquo updates repo exists for this version
+  uri:
+    url: "{{ abiquo_updates_repo }}/repodata/repomd.xml"
+  register: uri_test
+  failed_when: uri_test.status is undefined or uri_test.status <= 0
+
 - name: Create Base Repo
   yum_repository:
     name: abiquo-base
@@ -8,6 +27,12 @@
     gpgcheck: "{{ abiquo_repository_gpg_check }}"
     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
     enabled: yes
+  when: "not ansible_check_mode and (uri_test_base.status == 200)"
+
+- name: Delete Abiquo updates repository
+  yum_repository:
+    name: abiquo-updates
+    state: absent
 
 - name: Create Updates Repo
   yum_repository:
@@ -18,6 +43,7 @@
     gpgcheck: "{{ abiquo_repository_gpg_check }}"
     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
     enabled: yes
+  when: "(uri_test.status == 200)"
 
 - name: Clear cache after repo modification
   command: yum clean all
@@ -41,7 +67,7 @@
 
 - name: liquibase watchtower
   command: watchtower-db -h {{ abiquo_db_host }} -u {{ abiquo_db_user }} -p {{ abiquo_db_pass }} -P {{ abiquo_db_port }} update
-  notify: 
+  notify:
     - restart emmett
     - restart delorean
 

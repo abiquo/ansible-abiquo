@@ -1,10 +1,33 @@
 ---
 - include_tasks: apache.yml
+  when: execute_task_apache is defined and execute_task_apache
 
 - name: Install Abiquo packages for an Abiquo frontend
   yum:
     name: abiquo-ui
     state: present
+  when: not ansible_check_mode
 
 - name: Abiquo UI properties
   template: src=client-config-custom.json.j2 dest=/var/www/html/ui/config/client-config-custom.json
+  when: not ansible_check_mode
+
+- name: Install Abiquo beta UI (if it exists)
+  yum:
+    name: "{{ abiquo_package_name_ui_beta }}"
+    state: present
+  when: not ansible_check_mode and abiquo_install_frontend and abiquo_install_ui_beta
+
+- name: Create beta UI folder (if the beta UI exists)
+  file:
+    path: "{{ abiquo_install_path_config_ui_beta }}"
+    state: directory
+    mode: '0755'
+    recurse: yes
+  when: not ansible_check_mode and abiquo_install_frontend and abiquo_install_ui_beta
+
+- name: Abiquo beta UI properties (if the beta UI exists)
+  template:
+    src:  client-config-custom.json.j2
+    dest: "{{ abiquo_install_path_config_ui_beta }}/client-config-custom.json"
+  when: not ansible_check_mode and abiquo_install_frontend and abiquo_install_ui_beta

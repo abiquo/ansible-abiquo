@@ -1,22 +1,34 @@
 ---
 - include_tasks: mariadb_slave.yml
-  when: abiquo_reporing_install_slave
+  when: abiquo_reporting_install_slave
 
 - include_tasks: jasper.yml
 
 - name: Install MariaDB Clients
-  yum: name={{ item }} state=present
-  with_items:
-    - MariaDB-client
-    - MySQL-python
+  yum:
+    name:
+      - MariaDB-client
+      - MySQL-python
+    state: present
+  when: not ansible_check_mode
 
-- name: Download Abiquo reporting module
+- name: Download Abiquo reporting module (plan A)
   get_url:
     url: "{{ abiquo_reporting_core_url }}"
     dest: "{{ jasperserver_install_files }}/abiquo-reporting-core.zip"
     mode: 0644
     force: no
   register: download
+  when: abiquo_reporting_core_url is defined and abiquo_reporting_core_url != ''
+
+- name: Download Abiquo reporting module (plan B)
+  copy:
+    src:  "{{ abiquo_reporting_core_file }}"
+    dest: "{{ jasperserver_install_files }}/abiquo-reporting-core.zip"
+    mode: 0644
+    force: no
+  register: download
+  when: abiquo_reporting_core_file is defined and abiquo_reporting_core_file != ''
 
 - name: Install unzip to deflate reports zip file
   yum: name=unzip state=present
@@ -31,7 +43,7 @@
     remote_src: True
     src: "{{ jasperserver_install_files }}/abiquo-reporting-core.zip"
     dest: "{{ jasperserver_install_files }}/abiquo-reporting-core"
-  when: download.changed
+  when: download.changed and not ansible_check_mode
   register: zipextracted
 
 - name: Get JasperServer installation dir
@@ -50,6 +62,7 @@
     regexp: '^JASPERPATH=.*$'
     replace: "JASPERPATH={{ lsjasperinstall.stdout }}"
     backup: yes
+  when: not ansible_check_mode
 
 - set_fact:
     reporting_db_pwdflag: "-p {{ abiquo_reporting_db_password }}"
@@ -57,9 +70,12 @@
 
 - set_fact:
     install_reports_command: "./install.sh -h {{ abiquo_reporting_db_host }} -P {{ abiquo_reporting_db_port }} -u {{ abiquo_reporting_db_username }} {{ reporting_db_pwdflag is defined | ternary(reporting_db_pwdflag,'') }} "
+  when: not ansible_check_mode
 
 - name: Run Abiquo reporting core installation script
   shell: "{{ install_reports_command }}"
   args:
     chdir: "{{ jasperserver_install_files }}/abiquo-reporting-core"
-  when: zipextracted.changed
+  when:
+    - not ansible_check_mode
+    - zipextracted.changed or jasperserver_force_reinstall

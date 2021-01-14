@@ -26,6 +26,16 @@
     </Directory>
     RewriteRule ^/$ /ui/ [R]
 
+{% if abiquo_install_frontend and abiquo_install_ui_beta %}
+    <Directory "/var/www/html/ui5">
+        Options MultiViews FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+    RewriteRule ^/$ /ui5/ [R]
+{% endif %}
+
 {% for proxy, val in ui_proxies.items() %}
     <Location {{ proxy }}>
         ProxyPass {{ val.url }}
@@ -43,7 +53,7 @@
     SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
     SSLCertificateFile {{ ui_cert_file }}
     SSLCertificateKeyFile {{ ui_cert_key_file }}
-{% if ui_cert_ca_file is defined %}
+{% if ui_cert_ca_file|length > 0 and ui_cert_ca_file is defined and ui_server_name != 'localhost' %}
     SSLCACertificateFile {{ ui_cert_ca_file }}
 {% endif %}
 </VirtualHost>

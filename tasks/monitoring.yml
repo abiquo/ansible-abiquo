@@ -1,12 +1,14 @@
 ---
 - name: Install Abiquo packages for a monitoring server
-  yum: name={{ item }} state=present
-  with_items:
-    - abiquo-emmett
-    - abiquo-delorean
-    - abiquo-sosreport-plugins
-    - MariaDB-client
-    - jdk
+  yum:
+    name:
+      - abiquo-emmett
+      - abiquo-delorean
+      - abiquo-sosreport-plugins
+      - MariaDB-client
+      - jdk
+    state: present
+  when: not ansible_check_mode
 
 - name: Create watchtower schema.
   mysql_db:
@@ -17,6 +19,7 @@
     login_user: "{{ abiquo_monitoring_db_user }}"
     login_password: "{{ abiquo_monitoring_db_pass }}"
   register: watchtower_created
+  when: not ansible_check_mode
 
 - name: Ensure MySQL databases are present.
   mysql_db:
@@ -27,7 +30,7 @@
     login_user: "{{ abiquo_monitoring_db_user }}"
     login_password: "{{ abiquo_monitoring_db_pass }}"
     target: /usr/share/doc/abiquo-watchtower/database/src/watchtower-1.0.0.sql
-  when: watchtower_created.changed
+  when: not ansible_check_mode and watchtower_created.changed
   notify: liquibase watchtower
 
 - name: Abiquo Watchtower properties file
@@ -47,7 +50,7 @@
   file:
     path: "/etc/abiquo/watchtower/{{ item.item }}.properties"
     state: absent
-  when: item.stat.isreg
+  when: not ansible_check_mode and item.stat.isreg
   with_items: "{{ sym.results }}"
 
 - name: Abiquo Watchtower services config file
@@ -61,3 +64,4 @@
   notify:
     - restart emmett
     - restart delorean
+  when: not ansible_check_mode

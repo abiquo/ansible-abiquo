@@ -5,6 +5,7 @@
       - wget
       - kairosdb
     state: present
+  when: not ansible_check_mode
 
 - name: Applying KairosDB configuration template
   template:
@@ -15,8 +16,8 @@
 
 - name: Wait for Cassandra
   wait_for:
-    host: "{{ kariosdb_cassandra_rpc_address }}"
-    port: "{{ kariosdb_cassandra_rpc_port }}"
+    host: "{{ kairosdb_cassandra_rpc_address }}"
+    port: "{{ kairosdb_cassandra_rpc_port }}"
   when: kairosdb_wait_for_cassandra is defined and kairosdb_wait_for_cassandra
 
 - name: Start KairosDB service

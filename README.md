@@ -40,9 +40,9 @@ This variable sets the profile of the server in an Abiquo environment. Possible 
 
 # License and Authors
 
-* Author:: Marc Cirauqui (marc.cirauqui@abiquo.com)
+* Author:: Abiquo Support (support@abiquo.com)
 
-Copyright:: 2018, Abiquo
+Copyright:: 2018-2020, Abiquo
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

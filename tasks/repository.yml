@@ -5,10 +5,17 @@
 - name: Selinux state
   command: getenforce
   register: selinux_state
+  check_mode: no
 
 - name: Set selinux to permissive
   selinux: policy=targeted state=permissive
-  when: selinux_state.stdout != "Disabled"
+  when: selinux_state.stdout != 'Disabled' and not ansible_check_mode
+
+# Enable Abiquo base repository if it is available
+- uri:
+    url: "{{ abiquo_base_repo }}/repodata/repomd.xml"
+  register: uri_test_base
+  failed_when: uri_test_base.status is undefined or uri_test_base.status <= 0
 
 - name: Create Base Repo
   yum_repository:
@@ -19,8 +26,16 @@
     gpgcheck: "{{ abiquo_repository_gpg_check }}"
     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
     enabled: yes
+  when: "not ansible_check_mode and (uri_test_base.status == 200)"
 
-- name: Create Updates Repo
+# Enable Abiquo updates repository if it is available for the current version,
+# so it is necessary to make this task fail ONLY if its status is undefined.
+- uri:
+    url: "{{ abiquo_updates_repo }}/repodata/repomd.xml"
+  register: uri_test
+  failed_when: uri_test.status is undefined or uri_test.status <= 0
+
+- name: Create Updates Repo (from role ansible-abiquo, task repository, ID 1)
   yum_repository:
     name: abiquo-updates
     description: Abiquo update packages
@@ -29,16 +44,44 @@
     gpgcheck: "{{ abiquo_repository_gpg_check }}"
     gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
     enabled: yes
+  when: "not ansible_check_mode and (uri_test.status == 200)"
+
+- name: Update repositories information
+  command: yum makecache
+  args:
+    warn: no
 
 - name: Install release rpm
   yum: name=abiquo-release-ee state=present disable_gpg_check=yes
   notify:
+    - Delete Abiquo base repository
+    - Delete Abiquo updates repository
+    - Determine if the mainstream Abiquo base repo is available
+    - Determine if the mainstream Abiquo updates repo exists for this version
     - Create Base Repo
     - Create Updates Repo
     - Clear cache after repo modification
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: "not ansible_check_mode"
+
+- name: Create Updates Repo (from role ansible-abiquo, task repository, ID 2)
+  yum_repository:
+    name: abiquo-updates
+    description: Abiquo update packages
+    file: abiquo-updates
+    baseurl: "{{ abiquo_updates_repo }}"
+    gpgcheck: "{{ abiquo_repository_gpg_check }}"
+    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-RSA-KEY-Abiquo
+    enabled: yes
+  when: "not ansible_check_mode and (uri_test.status == 200)"
 
 - name: Run handlers update
   meta: flush_handlers
+
+- name: Update repositories information
+  command: yum makecache
+  args:
+    warn: no
 
 - name: Add EPEL repository
   yum: name=epel-release state=present

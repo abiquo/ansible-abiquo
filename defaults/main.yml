@@ -59,7 +59,7 @@ ui_proxies: {}
 # does not manage the certificate files path provided
 # for non generated certificates.
 #
-# Set this to any other value will skip selfsigned 
+# Set this to any other value will skip selfsigned
 # cert generation
 ui_cert_source: selfsigned
 
@@ -69,7 +69,7 @@ ui_cert_source: selfsigned
 ui_cert_file: /etc/pki/abiquo/{{ ui_server_name }}.crt
 ui_cert_key_file: /etc/pki/abiquo/{{ ui_server_name }}.key
 ui_cert_csr_file: /etc/pki/abiquo/{{ ui_server_name }}.csr
-# ui_cert_ca_file: ...
+ui_cert_ca_file: /etc/pki/abiquo/{{ ui_server_name }}.ca
 
 # UI app configuration attributes. These attributes will be rendered
 # in /var/www/html/ui/config/client-config-custom.json
@@ -143,22 +143,23 @@ cassandra_config: {}
 
 # KairosDB
 kairosdb_config_file_path: /opt/kairosdb/conf/kairosdb.properties
-kariosdb_cassandra_rpc_port: 9160
-kariosdb_cassandra_rpc_address: "{{ ansible_default_ipv4.address }}"
+kairosdb_cassandra_rpc_port: 9160
+kairosdb_cassandra_rpc_address: "{{ ansible_default_ipv4.address }}:9160"
 
 # Reporting
 # JasperServer
-jasperserver_version: 7.1.1
+jasperserver_version: 6.2.0
 jasperserver_install_files: /opt/jasper
-jasperserver_zip_url: "https://downloads.sourceforge.net/project/jasperserver/JasperServer/JasperReports%20Server%20Community%20Edition%20{{ jasperserver_version }}/TIB_js-jrs-cp_{{ jasperserver_version }}_bin.zip"
+jasperserver_zip_url: "https://sourceforge.net/projects/jasperserver/files/JasperServer/JasperReports%20Server%20Community%20Edition%20{{ jasperserver_version }}/jasperreports-server-cp-{{ jasperserver_version }}-bin.zip/download"
 jasperserver_tomcat_server_port: 8080
 jasperserver_tomcat_server_shutdown_port: 8005
 jasperserver_tomcat_server_ajp_port: 8009
 jasperserver_tomcat_server_proxy_port: 8888
 
 # Reporting Abiquo
-abiquo_reporing_install_slave: yes
-abiquo_reporting_core_url: nil
+abiquo_reporting_install_slave: yes
+abiquo_reporting_core_url: ''
+abiquo_reporting_core_file: 'abiquo-reporting-core.zip'
 abiquo_reporting_db_host: localhost
 abiquo_reporting_db_username: root
 abiquo_reporting_db_password: ''
@@ -186,10 +187,10 @@ default_mariadb_config:
     tmpdir: /var/tmp
     lc_messages_dir: /usr/share/mysql
     lc_messages: en_US
-    max_connections: 100
+    max_connections: 500
     connect_timeout: 5
     wait_timeout: 600
-    max_allowed_packet: 16M
+    max_allowed_packet: 256M
     thread_cache_size: 128
     sort_buffer_size: 4M
     bulk_insert_buffer_size: 16M
@@ -222,6 +223,7 @@ default_mariadb_config:
     server-id: 1
     binlog_format: ROW
     skip-external-locking:
+      log_error = /var/log/mysql/mysql.err
 
   mysqldump:
     max_allowed_packet: 16M

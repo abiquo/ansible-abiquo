@@ -14,10 +14,28 @@
     - proxy
     - proxy_ajp
     - proxy_http
+  when: not ansible_check_mode
+
+- name: Set Apache FQDN if the UI server name is localhost before restarting it!
+  lineinfile:
+    dest:   '/etc/httpd/conf.d/fqdn'
+    line:   "ServerName {{ ui_server_name }}"
+    state:  present
+    create: yes
+  when: not ansible_check_mode and ui_server_name == 'localhost'
+
+- name: Set Apache ServerName
+  lineinfile:
+    dest:   '/etc/httpd/conf/httpd.conf'
+    line:   "ServerName {{ ui_server_name }}"
+    regexp: '^#ServerName www.example.com:80'
+    state:  present
+  when: not ansible_check_mode
 
 - name: Apache Abiquo SSL config
   template: backup=yes dest=/etc/httpd/conf.d/abiquo.conf src=abiquo_ssl.conf.j2
   notify: restart httpd
+  when: not ansible_check_mode
 
 - name: Set Apache2 httpd Service enabled at start up
   service: name=httpd enabled=yes state=started
