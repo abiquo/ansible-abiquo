@@ -6,6 +6,7 @@
       - abiquo-sosreport-plugins
       - jdk
     state: present
+    disable_gpg_check: yes
 
 - name: Ensure abiquo/config folder exists
   file:
