@@ -79,3 +79,19 @@
   when:
     - not ansible_check_mode
     - zipextracted.changed or jasperserver_force_reinstall
+
+# TODO Is this the right place?
+- name: Assign privileges for the arm_daily_billing report from the usage-metrics-system report
+  mysql_user:
+    name: "abiquo"
+    host: "{{ item }}"
+    priv: "kinton.*:ALL/kinton_accounting.*:ALL"
+    priv: "arm_daily_billing.*:ALL"
+    append_privs: yes
+    login_user: "{{ abiquo_reporting_db_username }}"
+    login_password: "{{ reporting_db_pwdflag is defined | ternary(reporting_db_pwdflag,'') }}"
+    login_host: "{{ abiquo_reporting_db_host }}"
+    login_port: "{{ abiquo_reporting_db_port }}"
+  with_items:
+    - localhost
+    - '%'
